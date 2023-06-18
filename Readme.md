@@ -10,7 +10,7 @@ git clone https://github.com/Vortexdude/Xfusion
 cd Xfusion
 git checkout new-practice
 source venv/bin/activate
-pip3 install -r requerements.txt
+pip3 install -r requirements.txt
 
 
 
