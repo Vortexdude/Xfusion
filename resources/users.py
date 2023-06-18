@@ -2,7 +2,9 @@ import uuid
 from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint
-from db import users
+from sqlalchemy.exc import SQLAlchemyError
+from db import db
+from lib.models import UserModel
 from schema import UserSchema
 
 blp = Blueprint("users", __name__, description="Users Operations")
@@ -10,16 +12,25 @@ blp = Blueprint("users", __name__, description="Users Operations")
 @blp.route("/users")
 class Users(MethodView):
     def get(self):
-        return {"users": users}
+        gusers = []
+        users = UserModel.query.all()
+        for user in users:
+            gusers.append({
+                "id": user.id,
+                "fname": user.fname,
+                "lname": user.lname,
+                "email": user.email,
+                })
+        return {"users": gusers}
     
     @blp.arguments(UserSchema)
-    @blp.response(200, UserSchema(many=True))
     def post(self, users_data):
-        users_data = request.get_json()
-        if users_data["email"] in users.values():
-            return {"message": "User already present"}
         user_id = uuid.uuid4()
-        new_data = {"id": user_id, **users_data}
-        users.update(new_data)
-        return new_data
+        user = UserModel(**users_data)
+        try:
+            db.session.add(user)
+            db.session.commit()
+        except SQLAlchemyError:
+            return {"message": "An Error while inserting the data"}
+        return {"users": users_data}
     
