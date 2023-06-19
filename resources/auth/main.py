@@ -1,7 +1,7 @@
 from flask_smorest import Blueprint
 from flask.views import MethodView
 from schema import LoginSchema
-from lib.controller import UserController
+from lib.controller.main import AuthController
 
 blp = Blueprint("Authentication", __name__, description="Auth operations")
 
@@ -10,10 +10,9 @@ class Login(MethodView):
 
     @blp.arguments(LoginSchema)
     def post(self, logindata):
-        return UserController.login(logindata)
+        return AuthController.login(logindata)
         
 @blp.route("/logout")
 class Logout(MethodView):
     def get(self):
-        # return {"messages": "Logout Success!"}
-        return UserController.logout()
+        return AuthController.logout()

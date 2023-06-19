@@ -1,7 +1,7 @@
 from lib.models import UserModel
 from resources.auth.jwt import Jwt
 
-class UserController:
+class AuthController:
 
     @staticmethod
     def login(logindata):
@@ -19,3 +19,4 @@ class UserController:
     @staticmethod
     def logout():
         return {"Message": "You are logout Succesfull"}
+    
