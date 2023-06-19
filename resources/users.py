@@ -1,5 +1,4 @@
 import uuid
-from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint
 from sqlalchemy.exc import SQLAlchemyError
@@ -8,7 +7,7 @@ from lib.models import UserModel
 from schema import UserSchema
 
 blp = Blueprint("users", __name__, description="Users Operations")
-
+ 
 @blp.route("/users")
 class Users(MethodView):
     def get(self):
@@ -31,6 +30,6 @@ class Users(MethodView):
             db.session.add(user)
             db.session.commit()
         except SQLAlchemyError:
-            return {"message": "An Error while inserting the data"}
-        return {"users": users_data}
+            return {"message": "User is already present in the database"}
+        return {"users": "User created succesfully you can login now!"}
     

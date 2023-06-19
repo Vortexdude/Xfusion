@@ -1,8 +1,7 @@
 from flask import Flask, request
 from flask_smorest import Api
 from db import db
-from resources import UserBluePrint
-import lib.models
+from resources import UserBluePrint, AuthBlueprint
 import os
 #factory Structure
 def create_app(db_url=None):
@@ -21,5 +20,7 @@ def create_app(db_url=None):
     with app.app_context():
         db.create_all()
         
+    api.register_blueprint(AuthBlueprint)
     api.register_blueprint(UserBluePrint)
+
     return app

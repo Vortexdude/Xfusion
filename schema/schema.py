@@ -6,4 +6,9 @@ class UserSchema(Schema):
     fname = fields.Str(required=True)
     lname = fields.Str(required=True)
     email = fields.Str(required=True)
+    password = fields.Str(required=True)
+
+class LoginSchema(Schema):
+    email = fields.Str(required=True)
+    password = fields.Str(required=True)
     
