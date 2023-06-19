@@ -4,7 +4,7 @@ from flask_smorest import Blueprint
 from schema import UserSchema
 from lib.controller.user import UserController
 
-blp = Blueprint("users", __name__, description="Users Operations")
+blp = Blueprint("Users", __name__, description="Users Operations")
 
 #define the routes and call the controller
 # for a single endpoint I have defined two methods GET and POST

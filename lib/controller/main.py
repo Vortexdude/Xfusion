@@ -14,7 +14,7 @@ class AuthController:
                 return {"Message": "You have entred Wrong Credentials"}
         payload_data.update({"fname": data.fname, "email": data.email})
         token = Jwt.encode({"name": payload_data})
-        return {"token": str(token)}
+        return {"token": str(token), **payload_data}
     
     @staticmethod
     def logout():

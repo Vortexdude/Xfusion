@@ -16,3 +16,11 @@ class Jwt:
         except Exception as e:
             return e
         
+    @staticmethod
+    def decode(token):
+        """Decode token from Auth Token"""
+        try:
+            data = jwt.decode(token, 'secret')
+            return data
+        except:
+            return {'message': 'token is invalid!'}

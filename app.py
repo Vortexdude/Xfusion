@@ -12,8 +12,7 @@
 from flask import Flask, request
 from flask_smorest import Api
 from db import db
-from resources import UserBluePrint, AuthBlueprint
-import os
+from resources import UserBluePrint, AuthBlueprint, DcimBlueprint
 from config import devconf
 
 #factory Structure
@@ -28,5 +27,6 @@ def create_app(db_url=None):
     #registeting the routes named as blueprint
     api.register_blueprint(AuthBlueprint)
     api.register_blueprint(UserBluePrint)
+    api.register_blueprint(DcimBlueprint)
 
     return app
