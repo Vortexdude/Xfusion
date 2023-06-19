@@ -1,25 +1,31 @@
+################################
+# ------ AIM          --> Factory Structure for Flask api 
+# ------ Developed by --> Nitin Namdev -------------------
+# ------ API Documentation --> Swagger -------------------
+# ------ Views --> Flask_views and Methodview -------------
+# ------ Database --> SQLITE3 ----------------------------
+# ------ ORM --> SQLAlchemy ------------------------------
+# ------ Model --> Marshmellow ---------------------------
+
+################################
+
 from flask import Flask, request
 from flask_smorest import Api
 from db import db
 from resources import UserBluePrint, AuthBlueprint
 import os
+from config import devconf
+
 #factory Structure
 def create_app(db_url=None):
     app = Flask(__name__)
-    app.config["PROPAGATE_EXCEPTIONS"] = True
-    app.config["API_TITLE"] = "Xfusion Rest API"
-    app.config["API_VERSION"] = "1.0"
-    app.config["OPENAPI_VERSION"] = "3.0.3"
-    app.config["OPENAPI_URL_PREFIX"] = "/"
-    app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
-    app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
-    app.config["SQLALCHEMY_DATABASE_URI"] = db_url or os.getenv("DATABASE_URL", "sqlite:///data.db")
-    app.config["SQLALCHEMY_TRACK_MODIFICATION"] = False
+    app.config.update(**devconf)
     api = Api(app)
     db.init_app(app)
     with app.app_context():
         db.create_all()
-        
+
+    #registeting the routes named as blueprint
     api.register_blueprint(AuthBlueprint)
     api.register_blueprint(UserBluePrint)
 
