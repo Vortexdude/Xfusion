@@ -6,15 +6,14 @@
 # ------ Database --> SQLITE3 ----------------------------
 # ------ ORM --> SQLAlchemy ------------------------------
 # ------ Model --> Marshmellow ---------------------------
-
 ################################
 
-from flask import Flask, request
+from flask import Flask
 from flask_smorest import Api
-from db import db
-from resources import UserBluePrint, AuthBlueprint, DcimBlueprint
-from config import devconf
+from app.database.db import db
+from app.api.rest import UserBluePrint, DcimBluePrint, AuthBluePrint, CompanyBluePrint
 from flask_jwt_extended import JWTManager
+from app.common.settings import devconf
 
 #factory Structure
 def create_app(db_url=None):
@@ -27,8 +26,9 @@ def create_app(db_url=None):
         db.create_all()
 
     #registeting the routes named as blueprint
-    api.register_blueprint(AuthBlueprint)
+    api.register_blueprint(AuthBluePrint)
     api.register_blueprint(UserBluePrint)
-    api.register_blueprint(DcimBlueprint)
+    api.register_blueprint(DcimBluePrint)
+    api.register_blueprint(CompanyBluePrint)
 
     return app
