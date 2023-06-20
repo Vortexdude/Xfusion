@@ -16,6 +16,6 @@ class Login(MethodView):
 @blp.route("/logout")
 class Logout(MethodView):
 
-    @jwt_required        
+    @jwt_required()    
     def get(self):
         return AuthController.logout()

@@ -6,9 +6,8 @@
 # ------ Database --> SQLITE3 ----------------------------
 # ------ ORM --> SQLAlchemy ------------------------------
 # ------ Model --> Marshmellow ---------------------------
-
 ################################
-
+import os
 from flask import Flask, request
 from flask_smorest import Api
 from db import db
@@ -20,15 +19,24 @@ from flask_jwt_extended import JWTManager
 def create_app(db_url=None):
     app = Flask(__name__)
     app.config.update(**devconf)
-    jwt = JWTManager(app)
+    register_extions(app)
+    register_blueprint(app)
+    return app
+
+def register_extions(app):
+    """Register Flask Extention"""
+    
+    global api
     api = Api(app)
+    JWTManager(app)
     db.init_app(app)
     with app.app_context():
         db.create_all()
+    return None
 
-    #registeting the routes named as blueprint
+def register_blueprint(app):
+    """Register the BluePrints"""
+
     api.register_blueprint(AuthBlueprint)
     api.register_blueprint(UserBluePrint)
     api.register_blueprint(DcimBlueprint)
-
-    return app
