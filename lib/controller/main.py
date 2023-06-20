@@ -1,5 +1,5 @@
 from lib.models import UserModel
-from resources.auth.jwt import Jwt
+from flask_jwt_extended import create_access_token, get_jwt_identity
 
 class AuthController:
 
@@ -13,10 +13,12 @@ class AuthController:
         except AttributeError:
                 return {"Message": "You have entred Wrong Credentials"}
         payload_data.update({"fname": data.fname, "email": data.email})
-        token = Jwt.encode({"name": payload_data})
-        return {"token": str(token), **payload_data}
+        token = create_access_token(identity=payload_data)
+        return {"token": str(token), "expired in": 900}
     
     @staticmethod
     def logout():
-        return {"Message": "You are logout Succesfull"}
+        tokendata = get_jwt_identity()
+
+        return {"user": tokendata['fname'], "status": "Logged out!"}
     

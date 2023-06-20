@@ -5,3 +5,4 @@ sqlalchemy
 pyjwt
 flask-sqlalchemy
 mod_wsgi
+flask_jwt_extended

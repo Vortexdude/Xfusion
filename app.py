@@ -14,11 +14,13 @@ from flask_smorest import Api
 from db import db
 from resources import UserBluePrint, AuthBlueprint, DcimBlueprint
 from config import devconf
+from flask_jwt_extended import JWTManager
 
 #factory Structure
 def create_app(db_url=None):
     app = Flask(__name__)
     app.config.update(**devconf)
+    jwt = JWTManager(app)
     api = Api(app)
     db.init_app(app)
     with app.app_context():

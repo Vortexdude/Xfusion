@@ -1,5 +1,6 @@
 
 devconf = {
+    "JWT_SECRET_KEY": "secret",
     "PROPAGATE_EXCEPTIONS": True,
     "API_TITLE": "Xfusion Rest API",
     "API_VERSION": "1.0",

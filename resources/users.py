@@ -3,6 +3,8 @@ from flask.views import MethodView
 from flask_smorest import Blueprint
 from schema import UserSchema
 from lib.controller.user import UserController
+from flask_jwt_extended import jwt_required
+
 
 blp = Blueprint("Users", __name__, description="Users Operations")
 
@@ -10,6 +12,8 @@ blp = Blueprint("Users", __name__, description="Users Operations")
 # for a single endpoint I have defined two methods GET and POST
 @blp.route("/users")
 class Users(MethodView):
+
+    @jwt_required()
     def get(self):
         return UserController.fetch_users()
     
