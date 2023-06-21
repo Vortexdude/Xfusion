@@ -9,5 +9,7 @@ class UserModel(db.Model):
     password = db.Column(db.String(80), nullable=False)
 
     def __repr__(self):
+        """String representation of the Class for Debuging persose"""
+        
         return f"<Users {self.fname}>"
     
