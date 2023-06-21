@@ -12,4 +12,3 @@ class FlaskConfiguration:
     OPENAPI_SWAGGER_UI_URL = settings.openapi_swagger_ui_url
     SQLALCHEMY_DATABASE_URI = settings.sqlalchemy_database_uri
     SQLALCHEMY_TRACK_MODIFICATION = settings.sqlalchemy_track_modificatios
-    

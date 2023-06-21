@@ -3,6 +3,7 @@
 __pycache__/
 *.py[cod]
 .env
+*/instance/*.db
 
 # Installer logs
 pip-log.txt

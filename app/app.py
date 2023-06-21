@@ -15,20 +15,29 @@ from app.api.rest import UserBluePrint, DcimBluePrint, AuthBluePrint, CompanyBlu
 from flask_jwt_extended import JWTManager
 from app.config import FlaskConfiguration
 
-#factory Structure
 def create_app(db_url=None):
+    """App Starts form there"""
+
     app = Flask(__name__)
+    register_extensions(app)
+    register_blueprints(app)
+    return app
+
+def register_extensions(app):
+    """Registrating the extions"""
+
     app.config.from_object(FlaskConfiguration)
-    jwt = JWTManager(app)
+    global api
+    JWTManager(app)
     api = Api(app)
     db.init_app(app)
     with app.app_context():
         db.create_all()
 
-    #registeting the routes named as blueprint
+def register_blueprints(app):
+    """Registration of blueprints"""
+
     api.register_blueprint(AuthBluePrint)
     api.register_blueprint(UserBluePrint)
     api.register_blueprint(DcimBluePrint)
     api.register_blueprint(CompanyBluePrint)
-
-    return app
