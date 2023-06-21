@@ -13,12 +13,12 @@ from flask_smorest import Api
 from app.database.db import db
 from app.api.rest import UserBluePrint, DcimBluePrint, AuthBluePrint, CompanyBluePrint
 from flask_jwt_extended import JWTManager
-from app.common.settings import devconf
+from app.config import FlaskConfiguration
 
 #factory Structure
 def create_app(db_url=None):
     app = Flask(__name__)
-    app.config.update(**devconf)
+    app.config.from_object(FlaskConfiguration)
     jwt = JWTManager(app)
     api = Api(app)
     db.init_app(app)
