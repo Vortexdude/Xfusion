@@ -13,12 +13,13 @@ from flask_smorest import Api
 from app.database.db import db
 from app.api.rest import UserBluePrint, DcimBluePrint, AuthBluePrint, CompanyBluePrint
 from flask_jwt_extended import JWTManager
-from app.config import FlaskConfiguration
+from app.config import config_by_name
 
-def create_app(db_url=None):
+def create_app(env="dev"):
     """App Starts form there"""
 
     app = Flask(__name__)
+    app.config.from_object(config_by_name[env])
     register_extensions(app)
     register_blueprints(app)
     return app
@@ -26,7 +27,6 @@ def create_app(db_url=None):
 def register_extensions(app):
     """Registrating the extions"""
 
-    app.config.from_object(FlaskConfiguration)
     global api
     JWTManager(app)
     api = Api(app)

@@ -1,5 +1,4 @@
 import os
-from typing import Any
 from dotenv import load_dotenv
 
 class Settings:
@@ -50,3 +49,12 @@ class Settings:
     @property
     def propagate_exception(self):
         return self._get_env("PROPAGATE_EXCEPTIONS", True)
+
+    @property
+    def jwt_blacklist_enabled(self):
+        return self._get_env("JWT_BLACKLIST_ENABLED", True)
+    
+    @property
+    def jwt_blacklist_tokens(self):
+        return self._get_env("JWT_BLACKLIST_TOKEN_CHECKS", True)
+    
