@@ -1,4 +1,4 @@
-from db import db
+from app.database.db import db
 
 class UserModel(db.Model):
     __tablename__ = "users"
@@ -6,8 +6,10 @@ class UserModel(db.Model):
     fname = db.Column(db.String(80), nullable=False)
     lname = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(80), nullable=False)
+    password = db.Column(db.String(256), nullable=False)
 
     def __repr__(self):
+        """String representation of the Class for Debuging persose"""
+        
         return f"<Users {self.fname}>"
     

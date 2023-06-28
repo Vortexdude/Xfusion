@@ -1,6 +1,6 @@
-from lib.models import UserModel
+from app.model.users import UserModel
 from uuid import uuid4
-from db import db
+from app.database.db import db
 from sqlalchemy.exc import SQLAlchemyError
 
 class UserController:
