@@ -14,6 +14,9 @@ from app.database.db import db
 from app.api.rest import UserBluePrint, DcimBluePrint, AuthBluePrint, CompanyBluePrint
 from flask_jwt_extended import JWTManager
 from app.config import config_by_name
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt()
 
 def create_app(env="dev"):
     """App Starts form there"""
@@ -31,6 +34,7 @@ def register_extensions(app):
     JWTManager(app)
     api = Api(app)
     db.init_app(app)
+    bcrypt.init_app(app)
     with app.app_context():
         db.create_all()
 
