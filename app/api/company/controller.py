@@ -70,6 +70,7 @@ class CompanyController():
     
     @classmethod
     def delete_company(cls, key):
-        CompanyModel.query.filter_by(legal_entity_key=key['legal_entity_key']).delete()
-        db.session.commit()        
-        return {"Status": "Succesully Deleted"}
+        if bool(CompanyModel.query.filter_by(legal_entity_key=key['legal_entity_key']).delete()):
+            db.session.commit()        
+            return {"Status": "Company succesully deleted"}
+        return {"status": "Incorrect Id!"}
