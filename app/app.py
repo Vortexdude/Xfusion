@@ -11,7 +11,10 @@
 from flask import Flask
 from flask_smorest import Api
 from app.database.db import db
-from app.api.rest import UserBluePrint, DcimBluePrint, AuthBluePrint, CompanyBluePrint
+from app.api.user import UserBluePrint
+from app.api.auth import AuthBluePrint
+from app.api.company import CompanyBluePrint
+from app.api.dcim import DcimBluePrint
 from flask_jwt_extended import JWTManager
 from app.config import config_by_name
 from flask_bcrypt import Bcrypt
@@ -22,9 +25,13 @@ def create_app(env="dev"):
     """App Starts form there"""
 
     app = Flask(__name__)
+    app.logger.info("Initializing...")
     app.config.from_object(config_by_name[env])
+    app.logger.info("Configuring...")
     register_extensions(app)
+    app.logger.info("Registering extentions...")
     register_blueprints(app)
+    app.logger.info("Registering Blueprint...")
     return app
 
 def register_extensions(app):

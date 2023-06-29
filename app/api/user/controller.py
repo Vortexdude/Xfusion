@@ -1,4 +1,4 @@
-from app.model.users import UserModel
+from .model import UserModel
 from uuid import uuid4
 from app.database.db import db
 from sqlalchemy.exc import SQLAlchemyError
@@ -26,4 +26,13 @@ class UserController:
             db.session.commit()
         except SQLAlchemyError:
             return {"message": "User is already present in the database"}
-        return {"users": "User created succesfully you can login now!"}        
+        return {"users": "User created succesfully you can login now!"}
+    
+    @staticmethod
+    def delete_user(user_id):
+
+         if bool(UserModel.query.filter_by(id=user_id['userid']).delete()):
+            db.session.commit()
+            return {"Message": "Succesfully Deleted the user"}
+         else:
+            return {"Message": "Incorrect User id"}

@@ -1,8 +1,8 @@
 import uuid
 from flask.views import MethodView
 from flask_smorest import Blueprint
-from app.api.schema.user import UserSchema
-from app.common.controller.user import UserController
+from .schema import UserSchema, UserDelSchema
+from .controller import UserController
 from flask_jwt_extended import jwt_required
 
 blp = Blueprint("Users", __name__, description="Users Operations")
@@ -19,4 +19,8 @@ class Users(MethodView):
     @blp.arguments(UserSchema)
     def post(self, users_data):
         return UserController.store_user(users_data)
+        
+    @blp.arguments(UserDelSchema)
+    def delete(self, user_id):
+        return UserController.delete_user(user_id)
     
