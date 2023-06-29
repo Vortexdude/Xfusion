@@ -1,8 +1,8 @@
 import uuid
 from flask.views import MethodView
 from flask_smorest import Blueprint
-from app.api.schema.user import UserSchema
-from app.common.controller.user import UserController
+from .schema import UserSchema
+from .controller import UserController
 from flask_jwt_extended import jwt_required
 
 blp = Blueprint("Users", __name__, description="Users Operations")

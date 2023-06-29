@@ -1,7 +1,7 @@
 from flask_smorest import Blueprint
 from flask.views import MethodView
-from app.api.schema.user import LoginSchema
-from app.common.controller.auth import AuthController
+from .schema import LoginSchema
+from .controller import AuthController
 from flask_jwt_extended import jwt_required
 
 blp = Blueprint("Authentication", __name__, description="Auth operations")

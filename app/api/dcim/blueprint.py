@@ -11,5 +11,3 @@ class Dcim(MethodView):
     def get(self):
         current_user = get_jwt_identity()
         return {"message": "protected route", "current_user": current_user['fname']}
-        
-        

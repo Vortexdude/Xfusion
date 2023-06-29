@@ -1,4 +1,4 @@
-from app.model.users import UserModel
+from .model import UserModel
 from uuid import uuid4
 from app.database.db import db
 from sqlalchemy.exc import SQLAlchemyError

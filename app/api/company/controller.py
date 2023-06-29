@@ -1,4 +1,4 @@
-from app.model.company import CompanyModel
+from .model import CompanyModel
 from app.database.db import db
 from sqlalchemy.exc import SQLAlchemyError
 from uuid import uuid4

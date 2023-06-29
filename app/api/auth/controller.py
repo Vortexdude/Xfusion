@@ -1,4 +1,4 @@
-from app.model.users import UserModel
+from app.api.user.model import UserModel
 from flask_jwt_extended import create_access_token, get_jwt_identity
 
 class AuthController:
