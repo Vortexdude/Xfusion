@@ -5,3 +5,4 @@ sqlalchemy
 pyjwt
 flask-sqlalchemy
 flask_jwt_extended
+tk
