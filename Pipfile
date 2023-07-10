@@ -12,6 +12,7 @@ sqlalchemy = "*"
 pyjwt = "*"
 flask-sqlalchemy = "*"
 flask-jwt-extended = "*"
+mod-wsgi = "*"
 
 [dev-packages]
 

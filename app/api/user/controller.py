@@ -35,4 +35,4 @@ class UserController:
             db.session.commit()
             return {"Message": "Succesfully Deleted the user"}
          else:
-            return {"Message": "Incorrect User id"}
+            return {"Message": "User_id Doesn't exist"}

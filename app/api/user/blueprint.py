@@ -19,7 +19,8 @@ class Users(MethodView):
     @blp.arguments(UserSchema)
     def post(self, users_data):
         return UserController.store_user(users_data)
-        
+    
+    @jwt_required()
     @blp.arguments(UserDelSchema)
     def delete(self, user_id):
         return UserController.delete_user(user_id)
