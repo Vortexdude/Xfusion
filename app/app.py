@@ -15,6 +15,7 @@ from app.api.user import UserBluePrint
 from app.api.auth import AuthBluePrint
 from app.api.company import CompanyBluePrint
 from app.api.dcim import DcimBluePrint
+from app.api.permissions import PermBlueprint
 from flask_jwt_extended import JWTManager
 from app.config import config_by_name
 
@@ -49,3 +50,4 @@ def register_blueprints(app):
     api.register_blueprint(UserBluePrint)
     api.register_blueprint(DcimBluePrint)
     api.register_blueprint(CompanyBluePrint)
+    api.register_blueprint(PermBlueprint)
