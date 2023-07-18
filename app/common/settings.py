@@ -58,3 +58,18 @@ class Settings:
     def jwt_blacklist_tokens(self):
         return self._get_env("JWT_BLACKLIST_TOKEN_CHECKS", True)
     
+    @property
+    def api_spec_option(self):
+        data = {}
+        data['security'] = [{"bearerAuth": []}]
+        data['components'] = {
+                "securitySchemes":
+                    {
+                        "bearerAuth": {
+                            "type":"http",
+                            "scheme": "bearer",
+                            "bearerFormat": "JWT"
+                        }
+                    }
+            }
+        return data

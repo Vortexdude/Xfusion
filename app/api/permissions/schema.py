@@ -20,3 +20,10 @@ class UpdateSchema(Schema):
 
 class DeleteSchema(Schema):
     id = fields.Str(required=True)
+
+class AuthorizationHeaderSchema(Schema):
+    Authorization = fields.Str(
+        description='Authorization token',
+        required=True,
+        example='Bearer <your-token-here>'
+    )
