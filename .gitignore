@@ -5,6 +5,7 @@ __pycache__/
 .env
 **/**.db
 
+sandbox*.py
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
