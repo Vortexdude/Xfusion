@@ -16,6 +16,7 @@ class DefaultConfiguration:
     SQLALCHEMY_TRACK_MODIFICATION = settings.sqlalchemy_track_modificatios
     JWT_BLACKLIST_ENABLED = settings.jwt_blacklist_enabled
     JWT_BLACKLIST_TOKEN_CHECKS = settings.jwt_blacklist_tokens
+    API_SPEC_OPTIONS = settings.api_spec_option
 
 
 class DevelopmentConfig(DefaultConfiguration):

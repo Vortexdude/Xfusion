@@ -1,5 +1,4 @@
 from .model import UserModel
-from uuid import uuid4
 from app.database.db import db
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -19,7 +18,6 @@ class UserController:
         return {"users": UserController.users}    
     @staticmethod
     def store_user(users_data):
-        user_id = uuid4()
         user = UserModel(**users_data)
         try:
             db.session.add(user)
