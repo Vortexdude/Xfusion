@@ -13,6 +13,10 @@ pyjwt = "*"
 flask-sqlalchemy = "*"
 flask-jwt-extended = "*"
 mod-wsgi = "*"
+opencv-python = "*"
+numpy = "*"
+matplotlib = "*"
+torch = "*"
 
 [dev-packages]
 
