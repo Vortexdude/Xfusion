@@ -8,10 +8,10 @@ class CompanyController():
 
     @classmethod
     def fetch_company(cls):
-        cls.companies = []
+        _companies = []
         companies = CompanyModel.query.all()
         for company in companies:
-            cls.companies.append({
+            _companies.append({
                 "name": company.legal_entity_name,
                 "key": company.legal_entity_key,
                 "status": company.status,
@@ -25,7 +25,7 @@ class CompanyController():
                 "updated_by": company.updated_by
 
             })
-        return {"compnies": cls.companies}
+        return {"compnies": _companies}
     
     @classmethod
     def fetch_one_company(cls, key):
@@ -47,26 +47,7 @@ class CompanyController():
 
     @classmethod
     def update_company(cls, company_data, loggedInUser):
-        company = cls.fetch_one_company(company_data['legal_entity_name'])
-        if bool(company):
-            if company_data['legal_entity_name']:
-                company.legal_entity_name = company_data['legal_entity_name']
-
-            if company_data['account_type']:
-                company.account_type = company_data['account_type']
-
-            if company_data['status']:
-                company.status = company_data['status']
-
-            if company_data['location']:
-                company.location = company_data['location']
-
-            company.updated_by = loggedInUser
-
-            db.session.commit()
-            return {"Message": "data updated succesfully"}
-        else:
-            return {"Message": "Incorrect company Name"}
+        return CompanyModel().update_details(*loggedInUser, **company_data)
     
     @classmethod
     def delete_company(cls, key):

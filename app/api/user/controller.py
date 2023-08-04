@@ -3,19 +3,19 @@ from app.database.db import db
 from sqlalchemy.exc import SQLAlchemyError
 
 class UserController:
-    users = []
     
     @classmethod
     def fetch_users(cls):
+        _users = []
         users = UserModel.query.all()
         for user in users:
-            UserController.users.append({
+            _users.append({
                 "id": user.id,
                 "fname": user.fname,
                 "lname": user.lname,
                 "email": user.email,
                 })
-        return {"users": UserController.users}    
+        return {"users": _users}    
     @staticmethod
     def store_user(users_data):
         user = UserModel(**users_data)

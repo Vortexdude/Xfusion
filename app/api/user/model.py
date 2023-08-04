@@ -8,6 +8,7 @@ class UserModel(db.Model):
     lname = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
+    company = db.relationship('CompanyModel', backref='users')
 
     def __repr__(self):
         """String representation of the Class for Debuging persose"""

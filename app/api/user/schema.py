@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields
 
 class UserDelSchema(Schema):
-    userid = fields.Int(required=True)
+    userid = fields.Str(required=True)
 
 class UserSchema(Schema):
     id = fields.Int(dump_only=True)
