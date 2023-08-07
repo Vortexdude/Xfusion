@@ -16,18 +16,19 @@ class CompanyModel(db.Model):
     create_by = db.Column(db.Integer, db.ForeignKey('users.id'))
     updated_by = db.Column(db.String, nullable=True, default="")
 
+    @staticmethod
     def update_details(id=None, legal_entity_name=None, account_type=None, status=None, location=None, loggedInUser=None):
-        company = CompanyModel.query.filter_by(id=id).first()
+        company = CompanyModel.query.filter_by(legal_entity_key=id).first()
         if bool(company):
-            company.legal_entity_name = legal_entity_name if legal_entity_name else ""
-            company.account_type = account_type if account_type else ""
-            company.status = status if status else ""
-            company.location = location if location else ""
-            company.updated_by = loggedInUser if loggedInUser else ""
+            if legal_entity_name: company.legal_entity_name
+            if account_type: company.account_type = account_type 
+            if status: company.status = status
+            if location: company.location = location
+            if loggedInUser: company.updated_by = loggedInUser 
             db.session.commit()        
             return {"Message": "data updated succesfully"}
         else:
-            return {"Message": "Incorrect company Name"}
+            return {"Message": "Key not found"}
 
     def __repr__(self):
         """String representation of the Class for Debuging persose"""

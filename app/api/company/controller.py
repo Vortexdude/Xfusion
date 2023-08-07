@@ -47,7 +47,7 @@ class CompanyController():
 
     @classmethod
     def update_company(cls, company_data, loggedInUser):
-        return CompanyModel().update_details(*loggedInUser, **company_data)
+        return CompanyModel.update_details(loggedInUser=loggedInUser, **company_data)
     
     @classmethod
     def delete_company(cls, key):
