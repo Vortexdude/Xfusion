@@ -1,4 +1,3 @@
-import uuid
 from flask.views import MethodView
 from flask_smorest import Blueprint
 from .schema import UserSchema, UserDelSchema
@@ -18,7 +17,7 @@ class Users(MethodView):
     
     @blp.arguments(UserSchema)
     def post(self, users_data):
-        return UserController.store_user(users_data)
+        return UserController.create_user(users_data)
     
     @jwt_required()
     @blp.arguments(UserDelSchema)

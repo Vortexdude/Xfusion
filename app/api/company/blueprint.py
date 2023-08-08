@@ -1,7 +1,7 @@
 from flask_smorest import Blueprint
 from flask.views import MethodView
 from .controller import CompanyController
-from .schema import CompanySchema, CompanyDelSchema
+from .schema import CompanySchema, CompanyDelSchema, CompanyUpdateSchema
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 blp = Blueprint("Companies", __name__, description="Get all the companies")
@@ -24,9 +24,9 @@ class CompanyClass(MethodView):
         return CompanyController.store_company(company_data, self.loggedInUser)
 
     @jwt_required()
-    @blp.arguments(CompanySchema)
+    @blp.arguments(CompanyUpdateSchema)
     def put(self, company_data):
-        return CompanyController.update_company(company_data, self.loggedInUser)
+        return CompanyController.update_company(company_data, loggedInUser=self.loggedInUser)
 
     @jwt_required()
     @blp.arguments(CompanyDelSchema)

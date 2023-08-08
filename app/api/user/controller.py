@@ -1,36 +1,28 @@
 from .model import UserModel
-from app.database.db import db
-from sqlalchemy.exc import SQLAlchemyError
 
 class UserController:
-    users = []
     
     @classmethod
     def fetch_users(cls):
+        _users = []
         users = UserModel.query.all()
         for user in users:
-            UserController.users.append({
+            _users.append({
                 "id": user.id,
                 "fname": user.fname,
                 "lname": user.lname,
                 "email": user.email,
                 })
-        return {"users": UserController.users}    
+        return {"users": _users}    
     @staticmethod
-    def store_user(users_data):
-        user = UserModel(**users_data)
-        try:
-            db.session.add(user)
-            db.session.commit()
-        except SQLAlchemyError:
-            return {"message": "User is already present in the database"}
-        return {"users": "User created succesfully you can login now!"}
+    def create_user(users_data):
+        response = UserModel.create_record(users_data)
+        message = "User is already present in the database" if response else "User created succesfully you can login now!"
+        return {"message": message}
     
     @staticmethod
     def delete_user(user_id):
-
-         if bool(UserModel.query.filter_by(id=user_id['userid']).delete()):
-            db.session.commit()
-            return {"Message": "Succesfully Deleted the user"}
-         else:
-            return {"Message": "User_id Doesn't exist"}
+        id = user_id['userid']
+        response = UserModel.delete_record(id)
+        message = "Succesfully Deleted the user" if response else "User_id Doesn't exist"
+        return {"message": message}
