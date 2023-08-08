@@ -1,6 +1,6 @@
-from app.database.db import db
 from .model import RollModel
 
+data = {}
 class PermController():
     roles = []
 
@@ -20,39 +20,19 @@ class PermController():
 
     @classmethod
     def create_role(cls, rolldata):
-        modeldata = RollModel(**rolldata)
-        try:
-            db.session.add(modeldata)
-            db.session.commit()
-            return {"Message": "Record inserted succesfully!"}
-        except Exception as e:
-            return {"Message": f"There is an error in the queries{e}"}
+
+        response = RollModel.create_record(rolldata)
+        data['message'] = "Record inserted succesfully" if response else "There are some eror in the query"
+        return data
 
     @classmethod
     def update_role(cls, rolldata):
-        record = RollModel.query.filter(RollModel.id == rolldata['id']).first()
-        if record is not None:
-            if "name" in record.__dict__:
-                record.name = rolldata['name']
-
-            if "version" in record.__dict__:
-                record.version = rolldata['version']
-
-            if "permissions" in record.__dict__:
-                record.permissions = rolldata['permissions']
-        try:
-            db.session.commit()
-            return {"Message": "Record Updated succesfully!"}
-        except Exception as e:
-            return {"Message": f"There is an error in the queries{e}"}
+        response = RollModel.update_record(rolldata)
+        data['message'] = "Record Updated succesfully!" if response else "There is an error in the queries"
+        return data
 
     @classmethod
     def delete_role(cls, rolldata):
-        record = RollModel.query.filter(RollModel.id == rolldata['id']).first()
-        if record is not None:
-            db.session.delete(record)
-        try:
-            db.session.commit()
-            return {"Message": "Record Deleted succesfully!"}
-        except Exception as e:
-            return {"Message": f"There is an error in the queries{e}"}
+        response = RollModel.delete_record(rolldata)
+        data['message'] = "Record Deleted succesfully!" if response else "There is an error in the queries{e}"
+        return data
