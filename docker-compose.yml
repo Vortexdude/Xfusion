@@ -1,0 +1,19 @@
+x-fusion: &default-app
+  build:
+    context: "."
+    target: "app" # this app refers a name in docker file that given in FROM keyword
+    args:
+      - "UID=${UID:-1000}"
+      - "GID=${GID:-1000}"
+      - "FLASK_DEBUG=${FLASK_DEBUG:-true}"
+  env_file:
+    - ".env"
+  volumes:
+    - ".:/fusion"
+
+services:
+  web:
+    entrypoint: ["bash", "bin/docker-entrypoint"]
+    <<: *default-app
+    ports:
+      - "${DOCKER_WEB_PORT_FORWARD:-127.0.0.1:8000}:${PORT:-8000}"

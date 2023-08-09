@@ -1,28 +1,50 @@
 # start by pulling the python image
-FROM python:3.10
+FROM python:3.10 as app
+LABEL maintainer="Nitin Namdev itsmyidbro@gmail.com"
+
+WORKDIR /fusion
+
+ARG UID=1000
+ARG GID=1000
+
+RUN apt-get update -y \
+    && apt-get install -y --no-install-recommends build-essential curl libpq-dev \
+    && rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man \
+    && apt-get clean \
+    && groupadd -g "${GID}" python \
+    && useradd --create-home --no-log-init -u "${UID}" -g "${GID}" python \
+    && chown python:python -R /fusion
+
+USER python
+
+COPY --chown=python:python requirements*.txt  ./
+COPY --chown=python:python bin/* ./bin/
+
+RUN chmod 0755 bin/* && bash bin/pip3-install
+
+ARG FLASK_DEBUG="false"
+ENV FLASK_DEBUG="${FLASK_DEBUG}" \
+    FLASK_APP="manage.py" \
+    PYTHON_PATH="." \
+    PYTHONUNBUFFERED="true" \
+    PATH="${PATH}:/home/python/.local/bin" \
+    USER="python"
+
+COPY --chown=python:python . .
+
 EXPOSE 5000
 
-# copy the requirements file into the image
-COPY ./requirements.txt /app/requirements.txt
+CMD ["gunicorn", "-c", "python:app.common.gunicorn_config", "\"app.app:create_app('dev')\""]
+# CMD [ "flask", "run" ]
 
-# switch working directory
-WORKDIR /app
+# EXPOSE 5000
 
-# Install Apache and mod_wsgi using apt-get
-RUN apt-get update && apt-get install -y apache2 apache2-dev libapache2-mod-wsgi-py3 libgl1-mesa-glx 
+# RUN apt-get update && apt-get install -y apache2 apache2-dev libapache2-mod-wsgi-py3 libgl1-mesa-glx 
 
-# Copy the Pipfiles to the container
-COPY Pipfile Pipfile.lock /app/
+# COPY . .
 
-# Install pipenv
-RUN pip install pipenv
+# RUN pip3 install --no-cache-dir -r requirements.txt
 
-# install the dependencies and packages in the requirements file
-RUN pipenv install --deploy --ignore-pipfile
-# copy every content from the local file to the image
-COPY . /app
-
-# configure the container to run in an executed manner
 # ENTRYPOINT ["python"]
 
-CMD ["python", "-m", "flask", "run"]
+# CMD ["manage.py"]
