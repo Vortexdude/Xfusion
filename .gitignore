@@ -5,6 +5,8 @@ __pycache__/
 .env
 **/**.db
 
+venv/*
+
 *sandbox*
 # Installer logs
 pip-log.txt

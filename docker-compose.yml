@@ -1,0 +1,20 @@
+x-fusion: &default-app
+  build:
+    context: "."
+    target: "app" # this app refers a name in docker file that given in FROM keyword
+    args:
+      - "UID=${UID:-1000}"
+      - "GID=${GID:-1000}"
+      - "FLASK_DEBUG=${FLASK_DEBUG:-true}"
+  env_file:
+    - ".env"
+  volumes:
+    - ".:/fusion"
+
+services:
+  web:
+    entrypoint: ["bash", "bin/docker-entrypoint"]
+    <<: *default-app
+    command: ["gunicorn", "-c", "python:app.common.gunicorn_config", "app.app:create_app('dev')"]
+    ports:
+      - "127.0.0.1:5000:5000"
