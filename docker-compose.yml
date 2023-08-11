@@ -15,5 +15,6 @@ services:
   web:
     entrypoint: ["bash", "bin/docker-entrypoint"]
     <<: *default-app
+    command: ["gunicorn", "-c", "python:app.common.gunicorn_config", "app.app:create_app('dev')"]
     ports:
-      - "${DOCKER_WEB_PORT_FORWARD:-127.0.0.1:8000}:${PORT:-8000}"
+      - "127.0.0.1:5000:5000"

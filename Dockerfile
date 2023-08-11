@@ -17,12 +17,16 @@ RUN apt-get update -y \
 
 USER python
 
+#copt the requirement file
 COPY --chown=python:python requirements*.txt  ./
 COPY --chown=python:python bin/* ./bin/
 
+# install the pip3 reqirement using shell script
 RUN chmod 0755 bin/* && bash bin/pip3-install
 
 ARG FLASK_DEBUG="false"
+
+#set the environment variable
 ENV FLASK_DEBUG="${FLASK_DEBUG}" \
     FLASK_APP="manage.py" \
     PYTHON_PATH="." \
@@ -32,19 +36,7 @@ ENV FLASK_DEBUG="${FLASK_DEBUG}" \
 
 COPY --chown=python:python . .
 
+#exposing the port 5000
 EXPOSE 5000
 
-CMD ["gunicorn", "-c", "python:app.common.gunicorn_config", "\"app.app:create_app('dev')\""]
-# CMD [ "flask", "run" ]
-
-# EXPOSE 5000
-
-# RUN apt-get update && apt-get install -y apache2 apache2-dev libapache2-mod-wsgi-py3 libgl1-mesa-glx 
-
-# COPY . .
-
-# RUN pip3 install --no-cache-dir -r requirements.txt
-
-# ENTRYPOINT ["python"]
-
-# CMD ["manage.py"]
+CMD ["gunicorn", "-c", "python:app.common.gunicorn_config", "app.app:create_app('dev')"]
