@@ -1,5 +1,7 @@
 x-fusion: &default-app
   build:
+    environment:
+      - file: "${'.env':-''}"
     context: "."
     target: "app" # this app refers a name in docker file that given in FROM keyword
     args:
