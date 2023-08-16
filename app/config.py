@@ -31,9 +31,7 @@ class TestingConfig(DefaultConfiguration):
     """For Testing Environment"""
 
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'flask_test.db')
-    PRESERVE_CONTEXT_ON_EXCEPTION = False
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = settings.sqlalchemy_database_uri
 
 class ProductionConfig(DefaultConfiguration):
     """For Production Environment"""

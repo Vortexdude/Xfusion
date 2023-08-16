@@ -40,7 +40,16 @@ class Settings:
 
     @property
     def sqlalchemy_database_uri(self):
-        return self._get_env("SQLALCHEMY_DATABASE_URI", "sqlite:///data.db")
+        POSTGRES = {
+            "user": self._get_env("POSTGRES_USER", None),
+            "pw": self._get_env("POSTGRES_PASSWORD", None),
+            "host": self._get_env("POSTGRES_HOST", None),
+            "port": self._get_env("POSTGRES_PORT", None),
+            "db": self._get_env("POSTGRES_DB", None),
+        }
+        if not POSTGRES['user']:
+            return self._get_env("SQLALCHEMY_DATABASE_URI", "sqlite:///data.db")
+        return ("postgresql+psycopg2://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s" % POSTGRES)
 
     @property
     def sqlalchemy_track_modificatios(self):

@@ -16,6 +16,7 @@ class UserController:
         return {"users": _users}    
     @staticmethod
     def create_user(users_data):
+        # user = "check the user is present or not then create the user so the new error will gone"
         response = UserModel.create_record(users_data)
         message = "User is already present in the database" if response else "User created succesfully you can login now!"
         return {"message": message}

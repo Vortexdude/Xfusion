@@ -28,7 +28,7 @@ def create_app(env="dev"):
     app.logger.info(f"Using the {env} configuration")
     app.logger.info("Initializing...")
     app.config.from_object(config_by_name[env])
-    app.logger.info("Configuring...")
+    app.logger.info(config_by_name[env].__dict__)
     register_extensions(app)
     app.logger.info("Registering extentions...")
     register_blueprints(app)
