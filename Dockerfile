@@ -38,5 +38,3 @@ COPY --chown=python:python . .
 
 #exposing the port 5000
 EXPOSE 5000
-
-CMD ["gunicorn", "-c", "python:app.common.gunicorn_config", "app.app:create_app('dev')"]

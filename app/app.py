@@ -25,6 +25,7 @@ def create_app(env="dev"):
     """App Starts form there"""
 
     app = Flask(__name__)
+    app.logger.info(f"Using the {env} configuration")
     app.logger.info("Initializing...")
     app.config.from_object(config_by_name[env])
     app.logger.info("Configuring...")

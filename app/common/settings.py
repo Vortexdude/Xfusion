@@ -1,4 +1,4 @@
-import os
+import os, subprocess, sys
 from dotenv import load_dotenv
 
 class Settings:
@@ -73,3 +73,30 @@ class Settings:
                     }
             }
         return data
+
+    @property
+    def web_port(self):
+        return self._get_env("WEB_PORT", 5000)
+
+    @property
+    def web_app_name(self):
+        return self._get_env("WEB_APP_NAME", "Xfusion")
+
+    @property
+    def host(self):
+        return self._get_env("HOST", "0.0.0.0")
+
+
+def run_gunicorn(env):
+    command = [
+        "gunicorn",
+        "-c", "conf/gunicorn.py",
+        "--log-config", "conf/gunicorn_log.conf",
+        f"app.app:create_app('{env}')",
+        "--reload"
+    ]
+    try:
+        subprocess.run(command)
+    except KeyboardInterrupt:
+        print("\nReceived Ctrl+C. Stopping the server gracefully.")
+        sys.exit(0)

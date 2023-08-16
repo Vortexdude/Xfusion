@@ -1,3 +1,4 @@
+version: '3.8'
 x-fusion: &default-app
   build:
     context: "."
@@ -12,7 +13,19 @@ x-fusion: &default-app
 services:
   web:
     entrypoint: ["bash", "bin/docker-entrypoint"]
+    container_name: flask_web
     <<: *default-app
-    command: ["gunicorn", "-c", "python:app.common.gunicorn_config", "app.app:create_app('dev')"]
+    command: ["gunicorn", "-c", "conf/gunicorn.py", "app.app:create_app('test')", "--log-config", "conf/gunicorn_log.conf"]
+    depends_on:
+      - db
     ports:
       - "127.0.0.1:5000:5000"
+  db:
+    image: postgres:latest
+    container_name: postgres
+    env_file:
+      - "./.env"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+volumes:
+  postgres-data:
