@@ -40,42 +40,56 @@ class CompanyModel(db.Model):
             "created_by": self.create_by
         }
 
+    @classmethod
+    def fetch_all(cls):
+        compnies = cls.query.all()
+        compnies_list = [
+            {
+                "name": company.legal_entity_name,
+                "status": company.status,
+                "location": company.location,
+                "created_by": company.create_by,
+                "id": company.legal_entity_key,
+                "status": company.status,
+                "last_modified_time": company.create_timestamp
+
+            }
+            for company in compnies
+        ]
+        return compnies_list
+
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
 
-    def delte_from_db(self):
+    def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
 
 
-    @staticmethod
-    def fetch_record_by_id(id):
-        company = CompanyModel.query.filter_by(legal_entity_key=id).first()
-        return company.name
+    @classmethod
+    def fetch_record_by_id(cls, id):
+        return cls.query.filter_by(legal_entity_key=id).first()
 
-    @staticmethod
-    def update_record(id=None, legal_entity_name=None, account_type=None, status=None, location=None, loggedInUser=None):
-        company = CompanyModel.query.filter_by(legal_entity_key=id).first()
-        if bool(company):
-            if legal_entity_name: company.legal_entity_name
-            if account_type: company.account_type = account_type 
-            if status: company.status = status
-            if location: company.location = location
-            if loggedInUser: company.updated_by = loggedInUser 
-            db.session.commit()        
-            return True
-        else:
-            return False
+    @classmethod
+    def update_record(cls, id=None, legal_entity_name=None, account_type=None, status=None, location=None, loggedInUser=None):
+        company = cls.query.filter_by(legal_entity_key=id).first()
+        if company:
+            if legal_entity_name is not None:
+                company.legal_entity_name = legal_entity_name
+            if account_type is not None:
+                company.account_type = account_type
+            if status is not None:
+                company.status = status
+            if location is not None:
+                company.location = location
+            if loggedInUser is not None:
+                company.updated_by = loggedInUser
 
-    @staticmethod
-    def delete_record(key):
-        response = CompanyModel.query.filter_by(legal_entity_key=key).delete()
-        if bool(response):
             db.session.commit()
             return True
         else:
-            False
+            return False
 
     def __repr__(self):
         """String representation of the Class for Debuging persose"""
