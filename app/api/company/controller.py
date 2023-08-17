@@ -5,30 +5,15 @@ class CompanyController():
 
     @classmethod
     def fetch_company(cls):
-        _companies = []
-        companies = CompanyModel.query.all()
-        for company in companies:
-            _companies.append({
-                "name": company.legal_entity_name,
-                "key": company.legal_entity_key,
-                "status": company.status,
-                "account_type": company.account_type,
-                "create_timestamp": company.create_timestamp,
-                "last_modify_time": company.last_modify_time,
-                "description": company.description,
-                "assetes": company.assets,
-                "location": company.location,
-                "create_by": company.create_by,
-                "updated_by": company.updated_by
+        compnies = CompanyModel.fetch_all()
+        return {"compnies": compnies}
 
-            })
-        return {"compnies": _companies}
-    
     @classmethod
     def store_company(cls, company_data, loggedInUser):
         _data = {"create_by": loggedInUser, **company_data}
-        response = CompanyModel.register_record(_data)
-        message = "Record Inserted successfully" if response else "The company already exist on the database"
+        company = CompanyModel(**_data)
+        company.save_to_db()
+        message = "Record Inserted successfully" if company else "The company already exist on the database"
         return {"message": message}
 
     @classmethod

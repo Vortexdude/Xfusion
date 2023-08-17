@@ -26,12 +26,10 @@ class AuthController:
              message = HeaderValidator.timer(timeout)[1]
              return {"message": message}
         payload_data = {}
-        data = UserModel.query.filter(UserModel.email == logindata['email']).filter(UserModel.password == logindata['password']).first()
-        try:
-            if not data.fname:
-                pass
-        except AttributeError:
-                return {"Message": "You have entred Wrong Credentials"}
+        data = UserModel.auth(logindata['email'], logindata['password'])
+        if not data:
+            return {"Message": "You have entred Wrong Credentials"}
+
         payload_data.update({"fname": data.fname, "email": data.email})
         expires = datetime.timedelta(seconds=int(timeout))
         token = create_access_token(identity=payload_data, expires_delta=expires)
@@ -40,6 +38,5 @@ class AuthController:
     @staticmethod
     def logout():
         tokendata = get_jwt_identity()
-
         return {"user": tokendata['fname'], "status": "Logged out!"}
     

@@ -4,25 +4,21 @@ class UserController:
     
     @classmethod
     def fetch_users(cls):
-        _users = []
-        users = UserModel.query.all()
-        for user in users:
-            _users.append({
-                "id": user.id,
-                "fname": user.fname,
-                "lname": user.lname,
-                "email": user.email,
-                })
-        return {"users": _users}    
+        return {"users": UserModel.fetch_all_users()}
+     
     @staticmethod
     def create_user(users_data):
-        response = UserModel.create_record(users_data)
-        message = "User is already present in the database" if response else "User created succesfully you can login now!"
-        return {"message": message}
+        if UserModel.find_by_email(users_data['email']):
+            return {"message": "User already present on the database with {} email".format(users_data['email'])}
+        user = UserModel(**users_data)
+        user.save_to_db()
+        return {"message": "User created succesfully you can login now!"}
     
     @staticmethod
     def delete_user(user_id):
-        id = user_id['userid']
-        response = UserModel.delete_record(id)
-        message = "Succesfully Deleted the user" if response else "User_id Doesn't exist"
-        return {"message": message}
+        user =  UserModel.find_by_id(user_id['userid'])
+        if not user:
+            return {"message": "Can not find the user"}
+        else:
+            user.delete_from_db()
+            return {"message": "User Deleted succesfully"}
