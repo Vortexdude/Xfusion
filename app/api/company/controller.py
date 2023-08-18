@@ -1,48 +1,58 @@
 from .model import CompanyModel
+from sqlalchemy.exc import SQLAlchemyError
+
+COMPANY_REGISTERED_SUCCESSFULLY = "Company registered successfully"
+COMPANY_ALREADY_EXIST = "The company already exists in the database"
+DATABASE_ERROR = "An error occurred, possibly due to a database issue"
+ENTERED_WRONG_KEY = "You have entered the wrong key"
+DATA_UPDATED_SUCCESSFULLY = "Data updated successfully"
+KEY_NOT_FOUND = "Entered key not found in the database"
+WRONG_CREDENTIALS = "You have entered wrong credentials"
+COMPANY_DELETED_SUCCESSFULLY = "Company successfully deleted"
 
 class CompanyController():
-    companies = []
 
     @classmethod
     def fetch_company(cls):
-        _companies = []
-        companies = CompanyModel.query.all()
-        for company in companies:
-            _companies.append({
-                "name": company.legal_entity_name,
-                "key": company.legal_entity_key,
-                "status": company.status,
-                "account_type": company.account_type,
-                "create_timestamp": company.create_timestamp,
-                "last_modify_time": company.last_modify_time,
-                "description": company.description,
-                "assetes": company.assets,
-                "location": company.location,
-                "create_by": company.create_by,
-                "updated_by": company.updated_by
+        companies = CompanyModel.fetch_all()
+        return {"companies": companies}
 
-            })
-        return {"compnies": _companies}
-    
     @classmethod
     def store_company(cls, company_data, loggedInUser):
         _data = {"create_by": loggedInUser, **company_data}
-        response = CompanyModel.register_record(_data)
-        message = "Record Inserted successfully" if response else "The company already exist on the database"
+        company = CompanyModel(**_data)
+        try:
+            company.save_to_db()
+            message = COMPANY_REGISTERED_SUCCESSFULLY
+        except SQLAlchemyError as e:
+            if "UNIQUE constraint" in str(e):
+                message = COMPANY_ALREADY_EXIST
+            else:
+                message = DATABASE_ERROR
         return {"message": message}
 
     @classmethod
     def update_company(cls, company_data, loggedInUser):
+        company = CompanyModel.fetch_record_by_id(id=company_data['id'])
+        if not company:
+            return {"message": ENTERED_WRONG_KEY}
+
         response = CompanyModel.update_record(loggedInUser=loggedInUser, **company_data)
-        message = "data updated succesfully" if response else "Key not found"
+        message = DATA_UPDATED_SUCCESSFULLY if response else KEY_NOT_FOUND
         return {"message": message}
-    
+
     @classmethod
     def delete_company(cls, key):
         legal_entity_key = key['legal_entity_key']
-        if legal_entity_key:
-            response = CompanyModel.delete_record(legal_entity_key)
-            message= "Company succesully deleted" if response else "Incorrect Id!"
-        else:
-            message = "legal_entity_key not found"
+        company = CompanyModel.fetch_record_by_id(id=legal_entity_key)
+        
+        if not company:
+            return {"message": WRONG_CREDENTIALS}
+
+        try:
+            company.delete_from_db()
+            message = COMPANY_DELETED_SUCCESSFULLY
+        except SQLAlchemyError:
+            message = DATABASE_ERROR
+        
         return {"message": message}

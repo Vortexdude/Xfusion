@@ -3,6 +3,11 @@ from flask_jwt_extended import create_access_token, get_jwt_identity
 from flask import request
 import datetime, re
 
+MISSING_HEADER = "timeout headers is missing from the header"
+UNRECOGNISE_HEADER = "Timeout header containes string character"
+WRONG_CREDENTIALS = "You have entred Wrong Credentials"
+LOGGED_OUT = "Logged out!"
+
 class HeaderValidator:
     def __init__(self, header):
         self.header = header
@@ -10,11 +15,11 @@ class HeaderValidator:
     @classmethod
     def timer(cls, header):
         if not header:
-             return (False, "timeout headers is missing from the header")
+            return (False, MISSING_HEADER)
         elif re.search('[a-zA-Z]', header):
-             return (False, "Timeout header containes string character")
+            return (False, UNRECOGNISE_HEADER)
         else:
-             return (True, "")
+            return (True, "")
  
 class AuthController:
 
@@ -26,12 +31,10 @@ class AuthController:
              message = HeaderValidator.timer(timeout)[1]
              return {"message": message}
         payload_data = {}
-        data = UserModel.query.filter(UserModel.email == logindata['email']).filter(UserModel.password == logindata['password']).first()
-        try:
-            if not data.fname:
-                pass
-        except AttributeError:
-                return {"Message": "You have entred Wrong Credentials"}
+        data = UserModel.auth(logindata['email'], logindata['password'])
+        if not data:
+            return {"Message": WRONG_CREDENTIALS}
+
         payload_data.update({"fname": data.fname, "email": data.email})
         expires = datetime.timedelta(seconds=int(timeout))
         token = create_access_token(identity=payload_data, expires_delta=expires)
@@ -40,6 +43,5 @@ class AuthController:
     @staticmethod
     def logout():
         tokendata = get_jwt_identity()
-
-        return {"user": tokendata['fname'], "status": "Logged out!"}
+        return {"user": tokendata['fname'], "status": LOGGED_OUT}
     
