@@ -15,15 +15,16 @@ class Roles(MethodView):
 
     @jwt_required()
     @blp.arguments(RollSchema)
-    def post(self, rolldata):
-        return PermController.create_role(rolldata)
+    def post(self, roledata):
+        return PermController.create_role(roledata)
 
     @jwt_required()
     @blp.arguments(UpdateSchema)
-    def put(self, rolldata):
-        return PermController.update_role(rolldata)
+    def put(self, roledata):
+        return PermController.update_role(roledata)
 
     @jwt_required()
     @blp.arguments(DeleteSchema)
-    def delete(self, rolldata):
-        return PermController.delete_role(rolldata)
+    def delete(self, roledata):
+        return PermController.delete_role(roledata)
+
