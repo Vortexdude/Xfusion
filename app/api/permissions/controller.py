@@ -1,5 +1,13 @@
 from .model import RollModel
 
+ROLE_ALREADY_EXIST = "Role already exist in the database please use that or change the role name."
+ROLE_INSERTED_SUCCESFULL = "Record created succesfully!"
+ROLE_ID_MISSING = "Role ID is missing, please provide the role ID first"
+ROLE_UPDATED_SUCCESSFULLY = "Role Updated succesfully!"
+ROLE_NOT_EXIST = "The role is not Exist on the database"
+ROLE_DELETED_SUCCESFULLY = "Role Deleted successfully!"
+ROLE_QUERY_ERROR = "There was an error in the queries: {e}"
+
 class PermController():
 
     @classmethod
@@ -12,22 +20,22 @@ class PermController():
         role_name = roledata['name']
         role = RollModel.find_by_name(role_name)
         if role:
-            message = "Role already Exist please use that or change the role name"
+            message = ROLE_ALREADY_EXIST
         else:
             role = RollModel(**roledata)
             role.save_to_db()
-            message = "Record inserted succesfully"
+            message = ROLE_INSERTED_SUCCESFULL
         return {"message": message}
 
     @classmethod
     def update_role(cls, roledata):
         if "id" not in roledata:
-            return {"message": "Role ID is missing"}
+            return {"message": ROLE_ID_MISSING}
         response = RollModel.update_record(**roledata)
         if response:
-            message = "Record Updated succesfully!"
+            message = ROLE_UPDATED_SUCCESSFULLY
         else:
-            message = f"The role is not Exist on the database!"
+            message = ROLE_NOT_EXIST
         return {"message": message}
 
     @classmethod
@@ -36,7 +44,7 @@ class PermController():
         if role:
             try:
                 role.delete_from_db()
-                message = "Record Deleted successfully!"
+                message = ROLE_DELETED_SUCCESFULLY
             except Exception as e:
-                message = f"There was an error in the queries: {e}"
+                message = ROLE_QUERY_ERROR.format(e)
         return {"message": message}
