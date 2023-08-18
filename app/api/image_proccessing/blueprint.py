@@ -19,6 +19,15 @@ class ImageProccessingRoute(MethodView):
     @jwt_required()
     @blp.arguments(MultipartFileSchema, location='files')
     def post(self, file):
+        """method used for detecting the face from an image
+
+        Args:
+            file (image): the image that need to be filtered
+
+        Returns:
+            string or image: return the image with rectangle 
+            over the face is not it will return the string
+        """
         if not file:
             return {'message': 'Please upload file'}
         _file = file['file']
