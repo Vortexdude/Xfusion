@@ -1,38 +1,42 @@
 from .model import RollModel
 
-data = {}
 class PermController():
-    roles = []
 
     @classmethod
     def fetch_roles(cls):
-        cls.roles = []
-        data = RollModel.query.all()
-        for role in data:
-            cls.roles.append({
-                "name": role.name,
-                "id": role.id,
-                "permissions": role.permissions,
-                "version": role.version,
-                "create_timestamp": role.create_timestamp,
-            })
-        return {"roles": cls.roles}
+        roles_list = RollModel.fetch_all()
+        return {"roles": roles_list}
 
     @classmethod
-    def create_role(cls, rolldata):
-
-        response = RollModel.create_record(rolldata)
-        data['message'] = "Record inserted succesfully" if response else "There are some eror in the query"
-        return data
+    def create_role(cls, roledata):
+        role_name = roledata['name']
+        role = RollModel.find_by_name(role_name)
+        if role:
+            message = "Role already Exist please use that or change the role name"
+        else:
+            role = RollModel(**roledata)
+            role.save_to_db()
+            message = "Record inserted succesfully"
+        return {"message": message}
 
     @classmethod
-    def update_role(cls, rolldata):
-        response = RollModel.update_record(rolldata)
-        data['message'] = "Record Updated succesfully!" if response else "There is an error in the queries"
-        return data
+    def update_role(cls, roledata):
+        if "id" not in roledata:
+            return {"message": "Role ID is missing"}
+        response = RollModel.update_record(**roledata)
+        if response:
+            message = "Record Updated succesfully!"
+        else:
+            message = f"The role is not Exist on the database!"
+        return {"message": message}
 
     @classmethod
-    def delete_role(cls, rolldata):
-        response = RollModel.delete_record(rolldata)
-        data['message'] = "Record Deleted succesfully!" if response else "There is an error in the queries{e}"
-        return data
+    def delete_role(cls, roledata):
+        role = RollModel.find_by_id(id=roledata['id'])
+        if role:
+            try:
+                role.delete_from_db()
+                message = "Record Deleted successfully!"
+            except Exception as e:
+                message = f"There was an error in the queries: {e}"
+        return {"message": message}

@@ -16,7 +16,7 @@ class UserModel(db.Model):
         self.email = email
         self.password = password
 
-    def json(self):
+    def to_json(self):
         return {
             "id": self.id,
             "fname": self.fname,
