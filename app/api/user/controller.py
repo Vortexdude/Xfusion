@@ -20,7 +20,7 @@ class UserController:
         user = UserModel(**users_data)
         user.save_to_db()
         return {"message": USER_CREATED_SUCCESFULLY}
-    
+
     @staticmethod
     def delete_user(user_id):
         user =  UserModel.find_by_id(user_id['userid'])

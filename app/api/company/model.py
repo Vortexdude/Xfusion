@@ -15,6 +15,7 @@ class CompanyModel(db.Model):
     description = db.Column(db.Text, nullable=True)
     create_timestamp = db.Column(db.DateTime(timezone=True), server_default=func.now())
     last_modify_time = db.Column(db.DateTime, onupdate=func.now())
+
     create_by = db.Column(db.String)
     # create_by = db.Column(db.String, db.ForeignKey('users.id'))
     updated_by = db.Column(db.String, nullable=True, default="")

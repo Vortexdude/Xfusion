@@ -1,4 +1,4 @@
-import os
+import os, subprocess, sys
 from dotenv import load_dotenv
 
 class Settings:
@@ -40,7 +40,16 @@ class Settings:
 
     @property
     def sqlalchemy_database_uri(self):
-        return self._get_env("SQLALCHEMY_DATABASE_URI", "sqlite:///data.db")
+        POSTGRES = {
+            "user": self._get_env("POSTGRES_USER", None),
+            "pw": self._get_env("POSTGRES_PASSWORD", None),
+            "host": self._get_env("POSTGRES_HOST", None),
+            "port": self._get_env("POSTGRES_PORT", None),
+            "db": self._get_env("POSTGRES_DB", None),
+        }
+        if not POSTGRES['user']:
+            return self._get_env("SQLALCHEMY_DATABASE_URI", "sqlite:///data.db")
+        return ("postgresql+psycopg2://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s" % POSTGRES)
 
     @property
     def sqlalchemy_track_modificatios(self):
@@ -73,3 +82,30 @@ class Settings:
                     }
             }
         return data
+
+    @property
+    def web_port(self):
+        return self._get_env("WEB_PORT", 5000)
+
+    @property
+    def web_app_name(self):
+        return self._get_env("WEB_APP_NAME", "Xfusion")
+
+    @property
+    def host(self):
+        return self._get_env("HOST", "0.0.0.0")
+
+
+def run_gunicorn(env):
+    command = [
+        "gunicorn",
+        "-c", "conf/gunicorn.py",
+        "--log-config", "conf/gunicorn_log.conf",
+        f"app.app:create_app('{env}')",
+        "--reload"
+    ]
+    try:
+        subprocess.run(command)
+    except KeyboardInterrupt:
+        print("\nReceived Ctrl+C. Stopping the server gracefully.")
+        sys.exit(0)

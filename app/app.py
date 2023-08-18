@@ -19,15 +19,16 @@ from app.api.permissions import PermBlueprint
 # from app.api.image_proccessing import ImageProccessingBlueprint
 from flask_jwt_extended import JWTManager
 from app.config import config_by_name
-
+import pyfiglet
 
 def create_app(env="dev"):
     """App Starts form there"""
 
     app = Flask(__name__)
-    app.logger.info("Initializing...")
+    app.logger.info(f'\n{pyfiglet.figlet_format("Xfusion",font = "slant")}')
+    app.logger.info(f"Using Environment - {env}")
     app.config.from_object(config_by_name[env])
-    app.logger.info("Configuring...")
+    app.logger.info(f"Using the database - {config_by_name[env].__dict__['SQLALCHEMY_DATABASE_URI'].split(':')[0]}")
     register_extensions(app)
     app.logger.info("Registering extentions...")
     register_blueprints(app)
