@@ -13,21 +13,21 @@ class PermController():
         role_name = roledata['name']
         role = RollModel.find_by_name(role_name)
         if role:
-            message = CONF['role_already_exist']
-        else:
+            return {"message": CONF['role_already_exist']}
+        try:
             role = RollModel(**roledata)
             role.save_to_db()
-            message = CONF['role_created']
-        return {"message": message}
+            return {"id": role.to_json()['id']}
+        except Exception as e:
+            return {"message": CONF['query_error'].format(e)}
 
     @classmethod
     def update_role(cls, roledata, role_id):
         response = RollModel.update_record(**roledata, id=role_id)
         if response:
-            message = CONF['role_updated']
+            return {"message": CONF['role_updated']}
         else:
-            message = CONF['role_not_exist']
-        return {"message": message}
+            return {"message": CONF['role_not_exist']}
 
     @classmethod
     def delete_role(cls, role_id):
@@ -35,9 +35,8 @@ class PermController():
         if role:
             try:
                 role.delete_from_db()
-                message = CONF['role_deleted']
+                return {"message": CONF['role_deleted']}
             except Exception as e:
-                message = CONF['query_error'].format(e)
+                return {"message": CONF['query_error'].format(e)}
         else:
-            message = CONF['role_not_exist']
-        return {"message": message}
+            {"message": CONF['role_not_exist']}

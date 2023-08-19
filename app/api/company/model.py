@@ -31,7 +31,7 @@ class CompanyModel(db.Model):
 
     def to_json(self):
         return {
-            "id": self.id,
+            "id": self.legal_entity_key,
             "legal_entity_name": self.legal_entity_name,
             "status": self.status,
             "location": self.location,
@@ -73,7 +73,7 @@ class CompanyModel(db.Model):
         return cls.query.filter_by(legal_entity_key=id).first()
 
     @classmethod
-    def update_record(cls, id=None, legal_entity_name=None, account_type=None, status=None, location=None, loggedInUser=None):
+    def update_record(cls, id=None, legal_entity_name=None, account_type=None, status=None, location=None, logged_in_user=None):
         company = cls.query.filter_by(legal_entity_key=id).first()
         if company:
             if legal_entity_name is not None:
@@ -84,8 +84,8 @@ class CompanyModel(db.Model):
                 company.status = status
             if location is not None:
                 company.location = location
-            if loggedInUser is not None:
-                company.updated_by = loggedInUser
+            if logged_in_user is not None:
+                company.updated_by = logged_in_user
 
             db.session.commit()
             return True
