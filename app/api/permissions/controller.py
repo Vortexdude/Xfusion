@@ -1,12 +1,5 @@
 from .model import RollModel
-
-ROLE_ALREADY_EXIST = "Role already exist in the database please use that or change the role name."
-ROLE_INSERTED_SUCCESFULL = "Record created succesfully!"
-ROLE_ID_MISSING = "Role ID is missing, please provide the role ID first"
-ROLE_UPDATED_SUCCESSFULLY = "Role Updated succesfully!"
-ROLE_NOT_EXIST = "The role is not Exist on the database"
-ROLE_DELETED_SUCCESFULLY = "Role Deleted successfully!"
-ROLE_QUERY_ERROR = "There was an error in the queries: {e}"
+from conf.config_const import CONF
 
 class PermController():
 
@@ -20,20 +13,20 @@ class PermController():
         role_name = roledata['name']
         role = RollModel.find_by_name(role_name)
         if role:
-            message = ROLE_ALREADY_EXIST
+            message = CONF['role_already_exist']
         else:
             role = RollModel(**roledata)
             role.save_to_db()
-            message = ROLE_INSERTED_SUCCESFULL
+            message = CONF['role_created']
         return {"message": message}
 
     @classmethod
     def update_role(cls, roledata, role_id):
         response = RollModel.update_record(**roledata, id=role_id)
         if response:
-            message = ROLE_UPDATED_SUCCESSFULLY
+            message = CONF['role_updated']
         else:
-            message = ROLE_NOT_EXIST
+            message = CONF['role_not_exist']
         return {"message": message}
 
     @classmethod
@@ -42,7 +35,9 @@ class PermController():
         if role:
             try:
                 role.delete_from_db()
-                message = ROLE_DELETED_SUCCESFULLY
+                message = CONF['role_deleted']
             except Exception as e:
-                message = ROLE_QUERY_ERROR.format(e)
+                message = CONF['query_error'].format(e)
+        else:
+            message = CONF['role_not_exist']
         return {"message": message}
