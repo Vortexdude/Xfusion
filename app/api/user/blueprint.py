@@ -1,6 +1,6 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint
-from .schema import UserSchema, UserDelSchema
+from .schema import UserSchema
 from .controller import UserController
 from flask_jwt_extended import jwt_required
 
@@ -46,4 +46,3 @@ class UserOperations(MethodView):
             json: message of success for deleting the user
         """
         return UserController.delete_user(user_id)
-    
