@@ -31,9 +31,11 @@ class Users(MethodView):
             json: success or error message depending upon the user exist or not in the databse
         """
         return UserController.create_user(users_data)
-    
+
+@blp.route("/user/<string:user_id>")
+class UserOperations(MethodView):
+
     @jwt_required()
-    @blp.arguments(UserDelSchema)
     def delete(self, user_id):
         """For delet the user form the database it required a id that will fetch the user detail
 

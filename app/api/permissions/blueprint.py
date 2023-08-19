@@ -2,12 +2,17 @@ from flask.views import MethodView
 from flask_smorest import Blueprint
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from .controller import PermController
-from .schema import RollSchema, UpdateSchema, DeleteSchema
+from .schema import RollSchema, UpdateSchema
 
 blp = Blueprint("Permission/roles", __name__, description="Permision and roles related operations")
 
 @blp.route("/roles")
 class Roles(MethodView):
+
+    @jwt_required()
+    def __init__(self):
+        self.user = get_jwt_identity()
+        self.loggedInUser = self.user['fname']
 
     @jwt_required()
     def get(self):
@@ -35,9 +40,16 @@ class Roles(MethodView):
         """
         return PermController.create_role(roledata)
 
+
+@blp.route("/role/<string:role_id>")
+class RoleEditor(MethodView):
+
+    def __init__(self):
+        Roles.__init__(self)
+
     @jwt_required()
     @blp.arguments(UpdateSchema)
-    def put(self, roledata):
+    def put(self, roledata, role_id):
         """For updating the roles values, that required a identification key or ID 
         so that it will find and update the details in the database
 
@@ -47,11 +59,10 @@ class Roles(MethodView):
         Returns:
             json: success if id exist in the database
         """
-        return PermController.update_role(roledata)
+        return PermController.update_role(roledata, role_id)
 
     @jwt_required()
-    @blp.arguments(DeleteSchema)
-    def delete(self, roledata):
+    def delete(self, role_id):
         """for dete the role from the databse it required a id that should be 
         present on the database
 
@@ -61,5 +72,4 @@ class Roles(MethodView):
         Returns:
             json: message of success and error
         """
-        return PermController.delete_role(roledata)
-
+        return PermController.delete_role(role_id)

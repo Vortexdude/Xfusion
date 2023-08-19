@@ -13,13 +13,9 @@ class RollSchema(Schema):
     global_ultimate_key = fields.Str(required=True)
 
 class UpdateSchema(Schema):
-    id = fields.Str(required=True)
     name = fields.Str(required=False)
     version = fields.Str(required=False)
     permissions = fields.Str(required=False)
-
-class DeleteSchema(Schema):
-    id = fields.Str(required=True)
 
 class AuthorizationHeaderSchema(Schema):
     Authorization = fields.Str(
