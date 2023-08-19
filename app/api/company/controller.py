@@ -10,28 +10,27 @@ class CompanyController():
         return {"companies": companies}
 
     @classmethod
-    def store_company(cls, company_data, loggedInUser):
-        _data = {"create_by": loggedInUser, **company_data}
+    def store_company(cls, company_data, logged_in_user):
+        _data = {"create_by": logged_in_user, **company_data}
         company = CompanyModel(**_data)
+
         try:
             company.save_to_db()
-            message = CONF['company_registerd']
+            return {"company_id": company.to_json()['id']}
         except SQLAlchemyError as e:
             if "UNIQUE constraint" in str(e):
-                message = CONF['company_already_exist']
+                return {"message": CONF['company_already_exist']}
             else:
-                message = CONF['database_error']
-        return {"message": message}
+                return {"message": CONF['database_error']}
 
     @classmethod
-    def update_company(cls, company_data, loggedInUser, id):
+    def update_company(cls, company_data, logged_in_user, id):
         company = CompanyModel.fetch_record_by_id(id=id)
         if not company:
             return {"message": CONF['wrong_key']}
 
-        response = CompanyModel.update_record(loggedInUser=loggedInUser, id=id, **company_data)
-        message = CONF['data_updated'] if response else CONF['key_not_found']
-        return {"message": message}
+        response = CompanyModel.update_record(logged_in_user=logged_in_user, id=id, **company_data)
+        return {"message": CONF['data_updated']} if response else {"message": CONF['key_not_found']}
 
     @classmethod
     def delete_company(cls, key):
@@ -42,8 +41,6 @@ class CompanyController():
 
         try:
             company.delete_from_db()
-            message = CONF['company_deleted']
+            return {"message": CONF['company_deleted']}
         except SQLAlchemyError:
-            message = CONF['database_error']
-        
-        return {"message": message}
+            return {"message": CONF['database_error']}

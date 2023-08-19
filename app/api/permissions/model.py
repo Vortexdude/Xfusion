@@ -18,7 +18,7 @@ class RollModel(db.Model):
         self.permissions = permissions
         self.global_ultimate_key = global_ultimate_key
 
-    def json(self):
+    def to_json(self):
         return {
             "id": self.id,
             "name": self.name,

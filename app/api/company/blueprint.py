@@ -12,7 +12,7 @@ class CompanyClass(MethodView):
     @jwt_required()
     def __init__(self):
         self.user = get_jwt_identity()
-        self.loggedInUser = self.user['fname']
+        self.logged_in_user = self.user['fname']
 
     @jwt_required()
     def get(self):
@@ -35,7 +35,7 @@ class CompanyClass(MethodView):
         Returns:
             json: message: succesfully Registerd the company
         """
-        return CompanyController.store_company(company_data, self.loggedInUser)
+        return CompanyController.store_company(company_data, self.logged_in_user)
 
 @blp.route("/company/<string:company_id>")
 class CompanyOpeations(MethodView):
@@ -66,4 +66,4 @@ class CompanyOpeations(MethodView):
         Returns:
             json: message
         """ 
-        return CompanyController.update_company(company_data, loggedInUser=self.loggedInUser, id=company_id)
+        return CompanyController.update_company(company_data, logged_in_user=self.logged_in_user, id=company_id)

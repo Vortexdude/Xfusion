@@ -14,8 +14,12 @@ class UserController:
             return {"message": CONF['user_already_exist'].format(email=email)}
 
         user = UserModel(**users_data)
-        user.save_to_db()
-        return {"message": CONF['user_created']}
+        try:
+                
+            user.save_to_db()
+            return {"id": user.to_json()['id']}
+        except Exception as e:
+            return {"message": CONF['database_error']}
 
     @staticmethod
     def delete_user(user_id):
