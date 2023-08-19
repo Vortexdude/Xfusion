@@ -28,10 +28,8 @@ class PermController():
         return {"message": message}
 
     @classmethod
-    def update_role(cls, roledata):
-        if "id" not in roledata:
-            return {"message": ROLE_ID_MISSING}
-        response = RollModel.update_record(**roledata)
+    def update_role(cls, roledata, role_id):
+        response = RollModel.update_record(**roledata, id=role_id)
         if response:
             message = ROLE_UPDATED_SUCCESSFULLY
         else:
@@ -39,8 +37,8 @@ class PermController():
         return {"message": message}
 
     @classmethod
-    def delete_role(cls, roledata):
-        role = RollModel.find_by_id(id=roledata['id'])
+    def delete_role(cls, role_id):
+        role = RollModel.find_by_id(id=role_id)
         if role:
             try:
                 role.delete_from_db()

@@ -32,22 +32,21 @@ class CompanyController():
         return {"message": message}
 
     @classmethod
-    def update_company(cls, company_data, loggedInUser):
-        company = CompanyModel.fetch_record_by_id(id=company_data['id'])
+    def update_company(cls, company_data, loggedInUser, id):
+        company = CompanyModel.fetch_record_by_id(id=id)
         if not company:
             return {"message": ENTERED_WRONG_KEY}
 
-        response = CompanyModel.update_record(loggedInUser=loggedInUser, **company_data)
+        response = CompanyModel.update_record(loggedInUser=loggedInUser, id=id, **company_data)
         message = DATA_UPDATED_SUCCESSFULLY if response else KEY_NOT_FOUND
         return {"message": message}
 
     @classmethod
     def delete_company(cls, key):
-        legal_entity_key = key['legal_entity_key']
-        company = CompanyModel.fetch_record_by_id(id=legal_entity_key)
+        company = CompanyModel.fetch_record_by_id(id=key)
         
         if not company:
-            return {"message": WRONG_CREDENTIALS}
+            return {"message": KEY_NOT_FOUND}
 
         try:
             company.delete_from_db()

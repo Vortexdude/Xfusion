@@ -1,6 +1,6 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint
-from .schema import UserSchema, UserDelSchema
+from .schema import UserSchema
 from .controller import UserController
 from flask_jwt_extended import jwt_required
 
@@ -31,9 +31,11 @@ class Users(MethodView):
             json: success or error message depending upon the user exist or not in the databse
         """
         return UserController.create_user(users_data)
-    
+
+@blp.route("/user/<string:user_id>")
+class UserOperations(MethodView):
+
     @jwt_required()
-    @blp.arguments(UserDelSchema)
     def delete(self, user_id):
         """For delet the user form the database it required a id that will fetch the user detail
 
@@ -44,4 +46,3 @@ class Users(MethodView):
             json: message of success for deleting the user
         """
         return UserController.delete_user(user_id)
-    

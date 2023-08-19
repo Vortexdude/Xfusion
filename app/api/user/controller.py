@@ -23,7 +23,7 @@ class UserController:
 
     @staticmethod
     def delete_user(user_id):
-        user =  UserModel.find_by_id(user_id['userid'])
+        user =  UserModel.find_by_id(user_id)
 
         if not user:
             return {"message": USER_NOT_FOUND}
