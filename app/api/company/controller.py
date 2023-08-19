@@ -1,14 +1,6 @@
 from .model import CompanyModel
 from sqlalchemy.exc import SQLAlchemyError
-
-COMPANY_REGISTERED_SUCCESSFULLY = "Company registered successfully"
-COMPANY_ALREADY_EXIST = "The company already exists in the database"
-DATABASE_ERROR = "An error occurred, possibly due to a database issue"
-ENTERED_WRONG_KEY = "You have entered the wrong key"
-DATA_UPDATED_SUCCESSFULLY = "Data updated successfully"
-KEY_NOT_FOUND = "Entered key not found in the database"
-WRONG_CREDENTIALS = "You have entered wrong credentials"
-COMPANY_DELETED_SUCCESSFULLY = "Company successfully deleted"
+from conf.config_const import CONF
 
 class CompanyController():
 
@@ -23,22 +15,22 @@ class CompanyController():
         company = CompanyModel(**_data)
         try:
             company.save_to_db()
-            message = COMPANY_REGISTERED_SUCCESSFULLY
+            message = CONF['company_registerd']
         except SQLAlchemyError as e:
             if "UNIQUE constraint" in str(e):
-                message = COMPANY_ALREADY_EXIST
+                message = CONF['company_already_exist']
             else:
-                message = DATABASE_ERROR
+                message = CONF['database_error']
         return {"message": message}
 
     @classmethod
     def update_company(cls, company_data, loggedInUser, id):
         company = CompanyModel.fetch_record_by_id(id=id)
         if not company:
-            return {"message": ENTERED_WRONG_KEY}
+            return {"message": CONF['wrong_key']}
 
         response = CompanyModel.update_record(loggedInUser=loggedInUser, id=id, **company_data)
-        message = DATA_UPDATED_SUCCESSFULLY if response else KEY_NOT_FOUND
+        message = CONF['data_updated'] if response else CONF['key_not_found']
         return {"message": message}
 
     @classmethod
@@ -46,12 +38,12 @@ class CompanyController():
         company = CompanyModel.fetch_record_by_id(id=key)
         
         if not company:
-            return {"message": KEY_NOT_FOUND}
+            return {"message": CONF['key_not_found']}
 
         try:
             company.delete_from_db()
-            message = COMPANY_DELETED_SUCCESSFULLY
+            message = CONF['company_deleted']
         except SQLAlchemyError:
-            message = DATABASE_ERROR
+            message = CONF['database_error']
         
         return {"message": message}
