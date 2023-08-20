@@ -4,15 +4,12 @@ x-fusion: &default-app
     context: "."
     target: "app" # this app refers a name in docker file that given in FROM keyword
     args:
-      - "UID=${UID:-1000}"
-      - "GID=${GID:-1000}"
       - "FLASK_DEBUG=${FLASK_DEBUG:-true}"
   volumes:
     - ".:/fusion"
 
 services:
   web:
-    entrypoint: ["bash", "bin/docker-entrypoint"]
     container_name: flask_web
     <<: *default-app
     command: ["gunicorn", "-c", "conf/gunicorn.py", "app.app:create_app('test')", "--log-config", "conf/gunicorn_log.conf"]
