@@ -2,7 +2,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from .controller import PermController
-from .schema import RollSchema, UpdateSchema
+from .schema import RoleSchema, UpdateSchema
 
 blp = Blueprint("Permission/roles", __name__, description="Permision and roles related operations")
 
@@ -25,7 +25,7 @@ class Roles(MethodView):
         return PermController.fetch_roles()
 
     @jwt_required()
-    @blp.arguments(RollSchema)
+    @blp.arguments(RoleSchema)
     def post(self, roledata):
         """To create a new role inside the database using post request
             it will check the name in the database to verify the role is
@@ -46,6 +46,18 @@ class RoleEditor(MethodView):
 
     def __init__(self):
         Roles.__init__(self)
+
+    def get(self, role_id):
+        """For get the role details via RoleID 
+        so that it will find the details in the database
+
+        Args:
+            id (string): id of the role that should exist on the database
+
+        Returns:
+            json: success if id exist in the database
+        """        
+        return PermController.get_role(role_id)
 
     @jwt_required()
     @blp.arguments(UpdateSchema)

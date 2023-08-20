@@ -44,6 +44,19 @@ class CompanyOpeations(MethodView):
         CompanyClass.__init__(self)
     
     @jwt_required()
+    def get(self, company_id):
+        """For get the company details via CompanyID 
+        so that it will find the details in the database
+
+        Args:
+            id (string): id of the company that should exist on the database
+
+        Returns:
+            json: success if id exist in the database
+        """        
+        return CompanyController.get_company(company_id)
+
+    @jwt_required()
     def delete(self, company_id):
         """For deleting the comapny record from the database
 
