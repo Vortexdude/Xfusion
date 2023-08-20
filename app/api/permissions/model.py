@@ -2,7 +2,7 @@ from app.database.db import db
 from sqlalchemy.sql import func
 from uuid import uuid4
 
-class RollModel(db.Model):
+class RoleModel(db.Model):
     __tablename__ = "roles"
     id = db.Column(db.String(255), nullable=True, primary_key=True, default=str((lambda: uuid4())()))
     name = db.Column(db.String(80), unique=True, nullable=False)
@@ -39,8 +39,8 @@ class RollModel(db.Model):
         return role_list
 
     @classmethod
-    def find_by_id(cls, id):
-        return cls.query.filter_by(id=id).first()
+    def find_by_id(cls, role_id):
+        return cls.query.filter_by(id=role_id).first()
 
     @classmethod
     def find_by_name(cls, name):

@@ -6,7 +6,14 @@ class UserController:
     @staticmethod
     def fetch_users():
         return {"users": UserModel.fetch_all_users()}
-     
+
+    @staticmethod
+    def get_user(id):
+        user = UserModel.find_by_id(id)
+        if not user:
+            return {"message": CONF['key_not_found']}
+        return user.to_json()
+
     @staticmethod
     def create_user(users_data):
         email = users_data['email']

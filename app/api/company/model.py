@@ -73,6 +73,10 @@ class CompanyModel(db.Model):
         return cls.query.filter_by(legal_entity_key=id).first()
 
     @classmethod
+    def fetch_record_by_name(cls, name):
+        return cls.query.filter_by(legal_entity_name=name).first()
+
+    @classmethod
     def update_record(cls, id=None, legal_entity_name=None, account_type=None, status=None, location=None, logged_in_user=None):
         company = cls.query.filter_by(legal_entity_key=id).first()
         if company:

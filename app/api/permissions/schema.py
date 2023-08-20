@@ -5,7 +5,7 @@ class PermSchema(Schema):
     roles = fields.Str(requeried=True)
 
 
-class RollSchema(Schema):
+class RoleSchema(Schema):
     id = fields.Str(dump_only=True)
     name = fields.Str(required=True)
     version = fields.Str(required=True)

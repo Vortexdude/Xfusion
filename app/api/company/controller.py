@@ -10,15 +10,26 @@ class CompanyController():
         return {"companies": companies}
 
     @classmethod
+    def get_company(cls, compnay_id):
+        company = CompanyModel.fetch_record_by_id(compnay_id)
+        if not company:
+            return {"message": CONF['key_not_found']}        
+        return company.to_json()
+
+    @classmethod
     def store_company(cls, company_data, logged_in_user):
         _data = {"create_by": logged_in_user, **company_data}
-        company = CompanyModel(**_data)
+        company = CompanyModel.fetch_record_by_name(company_data['legal_entity_name'])
+        if company:
+            return {"message": CONF['company_already_exist']}
+
+        new_company = CompanyModel(**_data)
 
         try:
-            company.save_to_db()
-            return {"company_id": company.to_json()['id']}
+            new_company.save_to_db()
+            return {"company_id": new_company.to_json()['id']}
         except SQLAlchemyError as e:
-            if "UNIQUE constraint" in str(e):
+            if "duplicate key value" in str(e):
                 return {"message": CONF['company_already_exist']}
             else:
                 return {"message": CONF['database_error']}
