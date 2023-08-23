@@ -4,7 +4,7 @@ from uuid import uuid4
 
 class RoleModel(db.Model):
     __tablename__ = "roles"
-    id = db.Column(db.String(255), nullable=True, primary_key=True, default=str((lambda: uuid4())()))
+    id = db.Column(db.String(255), nullable=True, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
     version = db.Column(db.String(20), nullable=True)
     permissions = db.Column(db.String, nullable=True)
@@ -13,6 +13,7 @@ class RoleModel(db.Model):
     last_modify_time = db.Column(db.DateTime, onupdate=func.now())
 
     def __init__(self, name=None, version=None, permissions=None, global_ultimate_key=None):
+        self.id = str(uuid4())
         self.name = name
         self.version = version
         self.permissions = permissions

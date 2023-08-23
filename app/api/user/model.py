@@ -3,7 +3,7 @@ from uuid import uuid4
 
 class UserModel(db.Model):
     __tablename__ = "users"
-    id = db.Column(db.String(255), nullable=True, primary_key=True, default=str((lambda: uuid4())()))
+    id = db.Column(db.String(255), nullable=True, primary_key=True)
     fname = db.Column(db.String(80), nullable=False)
     lname = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(80), unique=True, nullable=False)
@@ -11,6 +11,7 @@ class UserModel(db.Model):
     # company = db.relationship('CompanyModel', backref='users')
 
     def __init__(self, fname, lname, email, password):
+        self.id = str(uuid4())
         self.fname = fname
         self.lname = lname
         self.email = email
