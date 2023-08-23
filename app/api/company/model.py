@@ -1,12 +1,11 @@
 from app.database.db import db
 from sqlalchemy.sql import func
-from sqlalchemy.exc import SQLAlchemyError
 from uuid import uuid4
 
 class CompanyModel(db.Model):
     __tablename__ = "companies"
-    id = db.Column(db.Integer, nullable=True, primary_key=True)
-    legal_entity_key = db.Column(db.String(255), nullable=True, default=str((lambda: uuid4())()))
+    id = db.Column(db.Integer, primary_key=True)
+    legal_entity_key = db.Column(db.String(255), nullable=True)
     legal_entity_name = db.Column(db.String(80), unique=True, nullable=False)
     status = db.Column(db.String(20), nullable=False)
     location = db.Column(db.String(50), nullable=False)
@@ -21,6 +20,7 @@ class CompanyModel(db.Model):
     updated_by = db.Column(db.String, nullable=True, default="")
 
     def __init__(self, legal_entity_name, status, location, account_type, create_by, assets=None, description=None):
+        self.legal_entity_key = str(uuid4())
         self.legal_entity_name = legal_entity_name
         self.status = status
         self.location = location
