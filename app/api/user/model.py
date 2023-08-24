@@ -1,5 +1,6 @@
 from app.database.db import db
 from uuid import uuid4
+from app.common.docs import UserJson
 
 class UserModel(db.Model):
     __tablename__ = "users"
@@ -17,7 +18,7 @@ class UserModel(db.Model):
         self.email = email
         self.password = password
 
-    def to_json(self):
+    def to_json(self) -> UserJson:
         return {
             "id": self.id,
             "fname": self.fname,
@@ -38,7 +39,7 @@ class UserModel(db.Model):
         return cls.query.filter_by(email=email, password=password).first()
     
     @classmethod
-    def fetch_all_users(cls):
+    def fetch_all_users(cls) -> List:
         users = cls.query.all()
         users_list = [
             {
@@ -51,15 +52,15 @@ class UserModel(db.Model):
             ]
         return users_list
 
-    def save_to_db(self):
+    def save_to_db(self) -> None:
         db.session.add(self)
         db.session.commit()
 
-    def delete_from_db(self):
+    def delete_from_db(self) -> None:
         db.session.delete(self)
         db.session.commit()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """String representation of the Class for Debuging persose"""
         
         return f"<Users {self.fname}>"

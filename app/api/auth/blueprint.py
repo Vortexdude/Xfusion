@@ -26,7 +26,7 @@ class Login(MethodView):
 
     @blp.arguments(LoginSchema, location='json')
     @blp.doc(parameters=[timeout_field])
-    def post(self, logindata):
+    def post(self, logindata: dict):
         return AuthController.login(logindata)
 
 @blp.route("/logout")

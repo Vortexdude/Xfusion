@@ -3,6 +3,7 @@ from flask_smorest import Blueprint
 from .schema import UserSchema
 from .controller import UserController
 from flask_jwt_extended import jwt_required
+from app.common.docs import UserJson
 
 blp = Blueprint("Users", __name__, description="Users Operations")
 
@@ -12,7 +13,7 @@ blp = Blueprint("Users", __name__, description="Users Operations")
 class Users(MethodView):
 
     @jwt_required()
-    def get(self):
+    def get(self) -> UserJson:
         """it will fetch all the records from the users tables
 
         Returns:
@@ -35,7 +36,7 @@ class Users(MethodView):
 @blp.route("/user/<string:user_id>")
 class UserOperations(MethodView):
 
-    def get(self, user_id):
+    def get(self, user_id: str) -> dict:
         """For get the user form the database it required a id that will fetch the user detail
 
         Args:
@@ -47,7 +48,7 @@ class UserOperations(MethodView):
         return UserController.get_user(user_id)      
 
     @jwt_required()
-    def delete(self, user_id):
+    def delete(self, user_id: str) -> dict:
         """For delet the user form the database it required a id that will fetch the user detail
 
         Args:

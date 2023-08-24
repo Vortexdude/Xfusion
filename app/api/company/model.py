@@ -1,6 +1,7 @@
 from app.database.db import db
 from sqlalchemy.sql import func
 from uuid import uuid4
+from app.common.docs import CompanyJson, CompanyList
 
 class CompanyModel(db.Model):
     __tablename__ = "companies"
@@ -29,7 +30,7 @@ class CompanyModel(db.Model):
         self.assets = assets
         self.description = description
 
-    def to_json(self):
+    def to_json(self) -> CompanyJson:
         return {
             "id": self.legal_entity_key,
             "legal_entity_name": self.legal_entity_name,
@@ -42,7 +43,7 @@ class CompanyModel(db.Model):
         }
 
     @classmethod
-    def fetch_all(cls):
+    def fetch_all(cls) -> CompanyList:
         compnies = cls.query.all()
         compnies_list = [
             {
@@ -59,11 +60,11 @@ class CompanyModel(db.Model):
         ]
         return compnies_list
 
-    def save_to_db(self):
+    def save_to_db(self) -> None:
         db.session.add(self)
         db.session.commit()
 
-    def delete_from_db(self):
+    def delete_from_db(self) -> None:
         db.session.delete(self)
         db.session.commit()
 
@@ -77,7 +78,7 @@ class CompanyModel(db.Model):
         return cls.query.filter_by(legal_entity_name=name).first()
 
     @classmethod
-    def update_record(cls, id=None, legal_entity_name=None, account_type=None, status=None, location=None, logged_in_user=None):
+    def update_record(cls, id=None, legal_entity_name=None, account_type=None, status=None, location=None, logged_in_user=None) -> bool:
         company = cls.query.filter_by(legal_entity_key=id).first()
         if company:
             if legal_entity_name is not None:
@@ -96,7 +97,7 @@ class CompanyModel(db.Model):
         else:
             return False
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """String representation of the Class for Debuging persose"""
         
         return f'<Company name {self.legal_entity_name}>'
