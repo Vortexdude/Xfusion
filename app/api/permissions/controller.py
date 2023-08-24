@@ -1,22 +1,22 @@
 from .model import RoleModel
 from conf.config_const import CONF
-
+from app.common.docs import RoleJson
 class PermController():
 
     @classmethod
-    def fetch_roles(cls):
+    def fetch_roles(cls) -> dict:
         roles_list = RoleModel.fetch_all()
         return {"roles": roles_list}
 
     @classmethod
-    def get_role(cls, role_id):
+    def get_role(cls, role_id: str) -> RoleJson:
         role = RoleModel.find_by_id(role_id)
         if not role:
             return {"message": CONF['key_not_found']}        
         return role.to_json()
 
     @classmethod
-    def create_role(cls, roledata):
+    def create_role(cls, roledata: str) -> dict:
         role_name = roledata['name']
         role = RoleModel.find_by_name(role_name)
         if role:
@@ -29,7 +29,7 @@ class PermController():
             return {"message": CONF['query_error'].format(e)}
 
     @classmethod
-    def update_role(cls, roledata, role_id):
+    def update_role(cls, roledata, role_id: str) -> dict:
         response = RoleModel.update_record(**roledata, id=role_id)
         if response:
             return {"message": CONF['role_updated']}
@@ -37,7 +37,7 @@ class PermController():
             return {"message": CONF['role_not_exist']}
 
     @classmethod
-    def delete_role(cls, role_id):
+    def delete_role(cls, role_id: str) -> dict:
         role = RoleModel.find_by_id(id=role_id)
         if role:
             try:

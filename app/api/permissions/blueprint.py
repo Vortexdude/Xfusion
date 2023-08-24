@@ -15,7 +15,7 @@ class Roles(MethodView):
         self.loggedInUser = self.user['fname']
 
     @jwt_required()
-    def get(self):
+    def get(self) -> dict:
         """Fetch all the roles that are present in the database 
         with the help of model method
 
@@ -26,7 +26,7 @@ class Roles(MethodView):
 
     @jwt_required()
     @blp.arguments(RoleSchema)
-    def post(self, roledata):
+    def post(self, roledata: dict) -> dict:
         """To create a new role inside the database using post request
             it will check the name in the database to verify the role is
             exist or not if not then it will create
@@ -47,7 +47,7 @@ class RoleEditor(MethodView):
     def __init__(self):
         Roles.__init__(self)
 
-    def get(self, role_id):
+    def get(self, role_id:str) -> dict:
         """For get the role details via RoleID 
         so that it will find the details in the database
 
@@ -61,7 +61,7 @@ class RoleEditor(MethodView):
 
     @jwt_required()
     @blp.arguments(UpdateSchema)
-    def put(self, roledata, role_id):
+    def put(self, roledata: dict, role_id: str) -> dict:
         """For updating the roles values, that required a identification key or ID 
         so that it will find and update the details in the database
 
@@ -74,7 +74,7 @@ class RoleEditor(MethodView):
         return PermController.update_role(roledata, role_id)
 
     @jwt_required()
-    def delete(self, role_id):
+    def delete(self, role_id: str) -> dict:
         """for dete the role from the databse it required a id that should be 
         present on the database
 

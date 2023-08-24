@@ -15,7 +15,7 @@ class CompanyClass(MethodView):
         self.logged_in_user = self.user['fname']
 
     @jwt_required()
-    def get(self):
+    def get(self) -> dict:
         """For get all the companies data with the get method
 
         Returns:
@@ -25,7 +25,7 @@ class CompanyClass(MethodView):
 
     @jwt_required()
     @blp.arguments(CompanySchema)
-    def post(self, company_data):
+    def post(self, company_data: dict) -> dict:
         """For creating a new company that required a json body
 
         Args:
@@ -44,7 +44,7 @@ class CompanyOpeations(MethodView):
         CompanyClass.__init__(self)
     
     @jwt_required()
-    def get(self, company_id):
+    def get(self, company_id: dict) -> dict:
         """For get the company details via CompanyID 
         so that it will find the details in the database
 

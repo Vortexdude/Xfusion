@@ -9,7 +9,7 @@ class HeaderValidator:
         self.header = header
 
     @classmethod
-    def timer(cls, header):
+    def timer(cls, header: str) -> tuple:
         if not header:
             return (False, CONF['missing_header'])
         elif re.search('[a-zA-Z]', header):
@@ -20,7 +20,7 @@ class HeaderValidator:
 class AuthController:
 
     @staticmethod
-    def login(logindata):
+    def login(logindata: dict) -> dict:
         timeout = request.headers.get("timeout")
         message = ""
         if not HeaderValidator.timer(timeout)[0]:
@@ -37,7 +37,7 @@ class AuthController:
         return {"token": str(token), "expired in": timeout}
     
     @staticmethod
-    def logout():
+    def logout() -> dict:
         tokendata = get_jwt_identity()
         return {"user": tokendata['fname'], "status": CONF['logged_out']}
     

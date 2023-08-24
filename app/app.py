@@ -21,7 +21,7 @@ from flask_jwt_extended import JWTManager
 from app.config import config_by_name
 from conf.config_const import BANNER
 
-def create_app(env="dev"):
+def create_app(env: str = "dev"):
     """App Starts form there"""
 
     app = Flask(__name__)
@@ -35,7 +35,7 @@ def create_app(env="dev"):
     app.logger.info("Registering Blueprint...")
     return app
 
-def register_extensions(app):
+def register_extensions(app) -> None:
     """Registrating the extions"""
 
     global api
@@ -45,7 +45,7 @@ def register_extensions(app):
     with app.app_context():
         db.create_all()
 
-def register_blueprints(app):
+def register_blueprints(app) -> None:
     """Registration of blueprints"""
 
     api.register_blueprint(AuthBluePrint)

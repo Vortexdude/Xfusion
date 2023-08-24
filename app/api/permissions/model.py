@@ -1,6 +1,7 @@
 from app.database.db import db
 from sqlalchemy.sql import func
 from uuid import uuid4
+from app.common.docs import RoleJson
 
 class RoleModel(db.Model):
     __tablename__ = "roles"
@@ -19,7 +20,7 @@ class RoleModel(db.Model):
         self.permissions = permissions
         self.global_ultimate_key = global_ultimate_key
 
-    def to_json(self):
+    def to_json(self) -> RoleJson:
         return {
             "id": self.id,
             "name": self.name,
@@ -47,11 +48,11 @@ class RoleModel(db.Model):
     def find_by_name(cls, name):
         return cls.query.filter_by(name=name).first()
 
-    def save_to_db(self):
+    def save_to_db(self) -> None:
         db.session.add(self)
         db.session.commit()
 
-    def delete_from_db(self):
+    def delete_from_db(self) -> None:
         db.session.delete(self)
         db.session.commit()       
 
