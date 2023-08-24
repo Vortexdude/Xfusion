@@ -5,8 +5,10 @@ PROJECT_NAME := myproject
 
 # Command to execute Docker Compose
 DOCKER_COMPOSE := docker-compose
+DOCKER_VOLUME := docker volume
+DOCKER_SYSTEM := docker system
 
-.PHONY: build up down
+.PHONY: build up down sRemove vRemove
 
 # Target to build the Docker Compose services
 build:
@@ -20,6 +22,13 @@ up:
 down:
 	$(DOCKER_COMPOSE) down
 
+sRemove:
+	$(DOCKER_SYSTEM) prune -f
+
+vRemove:
+	$(DOCKER_VOLUME) prune -f
+
+
 # Target to build and then bring up the services
 run: build up
 
@@ -28,6 +37,8 @@ stop: down
 
 # Target to restart the services
 restart: stop up
+
+delete: sRemove vRemove
 
 # Target to build, bring up, and then connect to a shell in a service
 connect: build up

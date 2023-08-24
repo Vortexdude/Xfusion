@@ -39,7 +39,7 @@ class UserModel(db.Model):
         return cls.query.filter_by(email=email, password=password).first()
     
     @classmethod
-    def fetch_all_users(cls) -> List:
+    def fetch_all_users(cls) -> list:
         users = cls.query.all()
         users_list = [
             {
