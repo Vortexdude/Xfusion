@@ -1,43 +1,8 @@
 import psutil, socket, datetime, subprocess
+from random import randint
 
 message = {}
 class ServerMonitor:
-
-    @staticmethod
-    def sample():
-        data = {
-            "server": "example-server",
-            "status": "healthy",
-            "timestamp": "2023-08-21T12:00:00Z",
-            "uptime": "2 days, 5 hours",
-            "cpu_usage": "10%",
-            "memory_usage": {
-                "used": "4.5 GB",
-                "total": "16 GB",
-                "percentage": "28%"
-            },
-            "disk_usage": {
-                "used": "150 GB",
-                "total": "500 GB",
-                "percentage": "30%"
-            },
-            "services": [
-                {
-                "name": "web",
-                "status": "running"
-                },
-                {
-                "name": "database",
-                "status": "running"
-                },
-                {
-                "name": "email",
-                "status": "stopped"
-                }
-            ]
-            }
-
-        return data
 
     @classmethod
     def get(cls):
@@ -55,7 +20,7 @@ class ServerMonitor:
         message['server'] = socket.gethostname()
         message['uptime'] = cls().uptime
         message['timestamp'] = current_timestamp.strftime("%m-%d-%Y %H:%M:%S")
-        # cls().get_top_process
+        message['services'] = cls().get_top_process
         return message
 
     @classmethod
@@ -77,7 +42,28 @@ class ServerMonitor:
 
     @property
     def get_top_process(self):
+        _data_dict = {}
         cmd = ['ps', '-eo', 'comm,%mem,%cpu', '--sort=-%mem']
-        data = str(subprocess.run(cmd, capture_output=True))
-        for _d in data.split("\n"):
-            print(_d)
+        proc1 = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        proc2 = subprocess.Popen(
+            ['head', '-10'],
+            stdin=proc1.stdout,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+            )
+
+        proc1.stdout.close() # Allow proc1 to receive a SIGPIPE if proc2 exits.
+        out, err = proc2.communicate()
+        for line in str(out).split("\\n")[1:-1]:
+            data = line.split()
+            service_name = data[0]
+            memory = f"{float(data[1]):.2f}%"
+            cpu = f"{float(data[2]):.2f}%"
+            print(line)
+            if service_name in _data_dict.keys():
+                service_name = f"{service_name}{randint(1, 9)}"
+            _data_dict[service_name] = {
+                "cpu_usage": cpu,
+                "memory_usage": memory
+            }
+        return _data_dict
