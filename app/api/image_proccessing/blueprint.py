@@ -7,7 +7,7 @@ import os
 from werkzeug.utils import secure_filename
 from .controller import ImageProccessing
 from .schema import MultipartFileSchema
-from app.common.paths import dir
+from app.common.utils import dir
 
 blp = Blueprint("Image_Proccessing", __name__, description="Proccessing Image using openCV")
 

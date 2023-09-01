@@ -1,8 +1,12 @@
 from app.api.user.model import UserModel
+from app.common.logging import logging
+from conf.config_const import CONF
 from flask_jwt_extended import create_access_token, get_jwt_identity
 from flask import request
-from conf.config_const import CONF
 import datetime, re
+
+log = logging(mode="warn")
+log.config(source='model')
 
 class HeaderValidator:
     def __init__(self, header):
@@ -19,6 +23,7 @@ class HeaderValidator:
  
 class AuthController:
 
+    @log.log_audit_trail("login")
     @staticmethod
     def login(logindata: dict) -> dict:
         timeout = request.headers.get("timeout")
@@ -35,9 +40,8 @@ class AuthController:
         expires = datetime.timedelta(seconds=int(timeout))
         token = create_access_token(identity=payload_data, expires_delta=expires)
         return {"token": str(token), "expired in": timeout}
-    
+
     @staticmethod
     def logout() -> dict:
         tokendata = get_jwt_identity()
         return {"user": tokendata['fname'], "status": CONF['logged_out']}
-    
