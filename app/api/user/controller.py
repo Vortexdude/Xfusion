@@ -1,5 +1,7 @@
+from typing import Dict
 from .model import UserModel
 from conf.config_const import CONF
+from app.common import is_valid_uuid
 
 class UserController:
 
@@ -8,14 +10,17 @@ class UserController:
         return {"users": UserModel.fetch_all_users()}
 
     @staticmethod
-    def get_user(id):
+    def get_user(id : str) -> None:
+        if not is_valid_uuid(id):
+            return {"message": CONF['wrong_key']}
+
         user = UserModel.find_by_id(id)
         if not user:
             return {"message": CONF['key_not_found']}
         return user.to_json()
 
     @staticmethod
-    def create_user(users_data):
+    def create_user(users_data) -> Dict[str, str]:
         email = users_data['email']
         if UserModel.find_by_email(email):
             return {"message": CONF['user_already_exist'].format(email=email)}
