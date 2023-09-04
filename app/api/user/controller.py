@@ -2,7 +2,7 @@ from .model import UserModel
 from conf.config_const import CONF
 
 class UserController:
-    
+
     @staticmethod
     def fetch_users():
         return {"users": UserModel.fetch_all_users()}
@@ -22,11 +22,10 @@ class UserController:
 
         user = UserModel(**users_data)
         try:
-                
             user.save_to_db()
             return {"id": user.to_json()['id']}
         except Exception as e:
-            return {"message": CONF['database_error']}
+            return {"message": str(e)}
 
     @staticmethod
     def delete_user(user_id):

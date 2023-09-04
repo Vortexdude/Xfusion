@@ -1,3 +1,4 @@
+import hashlib
 from app.database.db import db
 from uuid import uuid4
 from app.common.docs import UserJson
@@ -16,7 +17,9 @@ class UserModel(db.Model):
         self.fname = fname
         self.lname = lname
         self.email = email
-        self.password = password
+        _encoded_password_in_hex = hashlib.md5(password.encode())
+        _encoded_password = _encoded_password_in_hex.hexdigest()
+        self.password = _encoded_password
 
     def to_json(self) -> UserJson:
         return {
@@ -36,7 +39,9 @@ class UserModel(db.Model):
 
     @classmethod
     def auth(cls, email, password):
-        return cls.query.filter_by(email=email, password=password).first()
+        encoded_password_in_hex = hashlib.md5(password.encode())
+        encoded_password = encoded_password_in_hex.hexdigest()
+        return cls.query.filter_by(email=email, password=encoded_password).first()
     
     @classmethod
     def fetch_all_users(cls) -> list:
