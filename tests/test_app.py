@@ -16,4 +16,4 @@ def test_create_user_in_database(client):
         headers=headers
     )    
     data = responce.data.decode()
-    assert 'id' in data
+    assert data

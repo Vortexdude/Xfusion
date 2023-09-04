@@ -4,7 +4,7 @@ from app.app import create_app
 
 @pytest.fixture
 def client():
-    app = create_app(env='test')
+    app = create_app(env='dev')
     with app.test_client() as client:
         yield client
 
